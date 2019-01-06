@@ -1,0 +1,8 @@
+INTSTYLE=ise
+INFILE=C:\Xilinx\Technics_DVS\Main_assy.ncd
+OUTFILE=C:\Xilinx\Technics_DVS\Main_assy.bit
+FAMILY=Spartan6
+PART=xc6slx9-2tqg144
+WORKINGDIR=C:\Xilinx\Technics_DVS
+LICENSE=WebPack
+USER_INFO=209468160_0_0_455

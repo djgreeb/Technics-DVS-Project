@@ -1,0 +1,17 @@
+#-----------------------------------------------------------
+# PlanAhead v13.4
+# Build 157570 by hdbuild on Fri Dec 16 12:55:36 MST 2011
+# Start of session at: Wed Aug 19 23:14:16 2015
+# Process ID: 3452
+# Log file: C:/Xilinx/Projects/Technics_DVS/planAhead_run_2/planAhead.log
+# Journal file: C:/Xilinx/Projects/Technics_DVS/planAhead_run_2/planAhead.jou
+#-----------------------------------------------------------
+start_gui
+source C:/Xilinx/Projects/Technics_DVS/pa.fromHdl.tcl
+set_property loc "" [get_ports [list  reset]]
+startgroup
+set_property loc PAD104 [get_ports reset]
+endgroup
+save_design
+exit
+stop_gui

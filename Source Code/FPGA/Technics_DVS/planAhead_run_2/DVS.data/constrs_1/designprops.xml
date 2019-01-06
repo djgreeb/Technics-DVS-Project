@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<Compat Version="1" Minor="4">
+	<CompatParts>
+	</CompatParts>
+	<ConfigModes>
+		<Mode Id="JTAG"/>
+	</ConfigModes>
+	<PortProps>
+		<Port Name="Audio_data[7]" OffChipTerm="NONE"/>
+		<Port Name="Audio_data[6]" OffChipTerm="NONE"/>
+		<Port Name="Audio_data[5]" OffChipTerm="NONE"/>
+		<Port Name="Audio_data[4]" OffChipTerm="NONE"/>
+		<Port Name="Audio_data[3]" OffChipTerm="NONE"/>
+		<Port Name="Audio_data[2]" OffChipTerm="NONE"/>
+		<Port Name="Audio_data[1]" OffChipTerm="NONE"/>
+		<Port Name="Audio_data[0]" OffChipTerm="NONE"/>
+		<Port Name="RAM_Adress[12]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Adress[11]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Adress[10]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Adress[9]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Adress[8]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Adress[7]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Adress[6]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Adress[5]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Adress[4]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Adress[3]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Adress[2]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Adress[1]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Adress[0]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[15]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[14]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[13]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[12]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[11]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[10]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[9]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[8]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[7]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[6]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[5]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[4]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[3]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[2]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[1]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_Data[0]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="BA[1]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="BA[0]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="DQM[1]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="DQM[0]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[15]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[14]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[13]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[12]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[11]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[10]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[9]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[8]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[7]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[6]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[5]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[4]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[3]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[2]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[1]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="Audio_out[0]" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAS" OffChipTerm="FP_VTT_50"/>
+		<Port Name="CAS" OffChipTerm="FP_VTT_50"/>
+		<Port Name="CS" OffChipTerm="FP_VTT_50"/>
+		<Port Name="WE" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_clk" OffChipTerm="FP_VTT_50"/>
+		<Port Name="RAM_clk_en" OffChipTerm="FP_VTT_50"/>
+		<Port Name="serato_L" OffChipTerm="NONE"/>
+		<Port Name="serato_R" OffChipTerm="NONE"/>
+		<Port Name="clk" OffChipTerm="NONE"/>
+		<Port Name="avr_ready" OffChipTerm="NONE"/>
+		<Port Name="avrclk" OffChipTerm="FP_VTT_50"/>
+		<Port Name="G44" OffChipTerm="FP_VTT_50"/>
+		<Port Name="reset" OffChipTerm="NONE"/>
+	</PortProps>
+</Compat>
+

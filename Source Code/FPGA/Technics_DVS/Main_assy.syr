@@ -1,0 +1,669 @@
+Release 13.4 - xst O.87xd (nt)
+Copyright (c) 1995-2011 Xilinx, Inc.  All rights reserved.
+--> Parameter TMPDIR set to xst/projnav.tmp
+
+
+Total REAL time to Xst completion: 1.00 secs
+Total CPU time to Xst completion: 0.08 secs
+ 
+--> Parameter xsthdpdir set to xst
+
+
+Total REAL time to Xst completion: 1.00 secs
+Total CPU time to Xst completion: 0.08 secs
+ 
+--> Reading design: Main_assy.prj
+
+TABLE OF CONTENTS
+  1) Synthesis Options Summary
+  2) HDL Parsing
+  3) HDL Elaboration
+  4) HDL Synthesis
+       4.1) HDL Synthesis Report
+  5) Advanced HDL Synthesis
+       5.1) Advanced HDL Synthesis Report
+  6) Low Level Synthesis
+  7) Partition Report
+  8) Design Summary
+       8.1) Primitive and Black Box Usage
+       8.2) Device utilization summary
+       8.3) Partition Resource Summary
+       8.4) Timing Report
+            8.4.1) Clock Information
+            8.4.2) Asynchronous Control Signals Information
+            8.4.3) Timing Summary
+            8.4.4) Timing Details
+            8.4.5) Cross Clock Domains Report
+
+
+=========================================================================
+*                      Synthesis Options Summary                        *
+=========================================================================
+---- Source Parameters
+Input File Name                    : "Main_assy.prj"
+Ignore Synthesis Constraint File   : NO
+
+---- Target Parameters
+Output File Name                   : "Main_assy"
+Output Format                      : NGC
+Target Device                      : xc6slx9-2-tqg144
+
+---- Source Options
+Top Module Name                    : Main_assy
+Automatic FSM Extraction           : YES
+FSM Encoding Algorithm             : Auto
+Safe Implementation                : No
+FSM Style                          : LUT
+RAM Extraction                     : Yes
+RAM Style                          : Auto
+ROM Extraction                     : Yes
+Shift Register Extraction          : YES
+ROM Style                          : Auto
+Resource Sharing                   : YES
+Asynchronous To Synchronous        : NO
+Shift Register Minimum Size        : 2
+Use DSP Block                      : Auto
+Automatic Register Balancing       : No
+
+---- Target Options
+LUT Combining                      : Auto
+Reduce Control Sets                : Auto
+Add IO Buffers                     : YES
+Global Maximum Fanout              : 100000
+Add Generic Clock Buffer(BUFG)     : 16
+Register Duplication               : YES
+Optimize Instantiated Primitives   : NO
+Use Clock Enable                   : Auto
+Use Synchronous Set                : Auto
+Use Synchronous Reset              : Auto
+Pack IO Registers into IOBs        : Auto
+Equivalent register Removal        : YES
+
+---- General Options
+Optimization Goal                  : Speed
+Optimization Effort                : 1
+Power Reduction                    : NO
+Keep Hierarchy                     : No
+Netlist Hierarchy                  : As_Optimized
+RTL Output                         : Yes
+Global Optimization                : AllClockNets
+Read Cores                         : YES
+Write Timing Constraints           : NO
+Cross Clock Analysis               : NO
+Hierarchy Separator                : /
+Bus Delimiter                      : <>
+Case Specifier                     : Maintain
+Slice Utilization Ratio            : 100
+BRAM Utilization Ratio             : 100
+DSP48 Utilization Ratio            : 100
+Auto BRAM Packing                  : NO
+Slice Utilization Ratio Delta      : 5
+
+=========================================================================
+
+INFO:Xst - Part-select index evaluated to out of bound value may lead to incorrect synthesis results; it is recommended not to use them in RTL
+
+=========================================================================
+*                          HDL Parsing                                  *
+=========================================================================
+Parsing VHDL file "C:\Xilinx\Technics_DVS\DVS\Main_assy.vhd" into library work
+Parsing entity <Main_assy>.
+Parsing architecture <Behavioral> of entity <main_assy>.
+
+=========================================================================
+*                            HDL Elaboration                            *
+=========================================================================
+
+Elaborating entity <Main_assy> (architecture <Behavioral>) from library <work>.
+
+=========================================================================
+*                           HDL Synthesis                               *
+=========================================================================
+
+Synthesizing Unit <Main_assy>.
+    Related source file is "c:/xilinx/technics_dvs/dvs/main_assy.vhd".
+    Found 1-bit register for signal <UART>.
+    Found 1-bit register for signal <G44>.
+    Found 1-bit register for signal <rcue_1>.
+    Found 1-bit register for signal <rcue_2>.
+    Found 1-bit register for signal <playcue_1>.
+    Found 1-bit register for signal <playcue_2>.
+    Found 1-bit register for signal <srchplus>.
+    Found 1-bit register for signal <srchminus>.
+    Found 1-bit register for signal <loopin>.
+    Found 1-bit register for signal <loopout>.
+    Found 1-bit register for signal <loopen>.
+    Found 15-bit register for signal <clk_dev>.
+    Found 7-bit register for signal <read_dev>.
+    Found 9-bit register for signal <uart_dev>.
+    Found 6-bit register for signal <uart_operation>.
+    Found 1-bit register for signal <need_frame>.
+    Found 1-bit register for signal <need_buffer>.
+    Found 24-bit register for signal <radress>.
+    Found 24-bit register for signal <radress_t>.
+    Found 24-bit register for signal <wadress>.
+    Found 16-bit register for signal <RAM_Data[15]_dff_283_OUT>.
+    Found 1-bit register for signal <CS>.
+    Found 1-bit register for signal <CAS>.
+    Found 1-bit register for signal <RAS>.
+    Found 1-bit register for signal <WE>.
+    Found 2-bit register for signal <DQM>.
+    Found 1-bit register for signal <RAM_clk>.
+    Found 1-bit register for signal <part>.
+    Found 1-bit register for signal <rdy>.
+    Found 16-bit register for signal <LOOP_IN_reg>.
+    Found 16-bit register for signal <LOOP_OUT_reg>.
+    Found 1-bit register for signal <sst>.
+    Found 1-bit register for signal <uart_start_send>.
+    Found 10-bit register for signal <uart_send_buffer>.
+    Found 16-bit register for signal <one_second>.
+    Found 3-bit register for signal <pulse_counter>.
+    Found 1-bit register for signal <flagPORT>.
+    Found 1-bit register for signal <flag>.
+    Found 16-bit register for signal <CUE_1>.
+    Found 16-bit register for signal <CUE_2>.
+    Found 8-bit register for signal <TRACK_TIME>.
+    Found 16-bit register for signal <Audio_out>.
+    Found 2-bit register for signal <BA>.
+    Found 13-bit register for signal <RAM_Adress>.
+    Found 1-bit register for signal <avrclk>.
+    Found 16-bit register for signal <Audio_reg>.
+    Found 1-bit register for signal <NXT_clk_DFF_92>.
+    Found 1-bit register for signal <NXT_clk_DFF_93>.
+    Found 1-bit register for signal <NXT_clk_DFF_94>.
+    Found 1-bit register for signal <NXT_clk_DFF_95>.
+    Found 1-bit register for signal <NXT_clk_DFF_96>.
+    Found 1-bit register for signal <NXT_clk_DFF_97>.
+    Found 1-bit register for signal <NXT_clk_DFF_98>.
+    Found 1-bit register for signal <NXT_clk_DFF_99>.
+    Found 1-bit register for signal <NXT_clk_DFF_100>.
+    Found 1-bit register for signal <NXT_clk_DFF_101>.
+    Found 1-bit register for signal <NXT_clk_DFF_102>.
+    Found 1-bit register for signal <NXT_clk_DFF_103>.
+    Found 1-bit register for signal <NXT_clk_DFF_104>.
+    Found 1-bit register for signal <NXT_clk_DFF_105>.
+    Found 1-bit register for signal <NXT_clk_DFF_106>.
+    Found 1-bit register for signal <NXT_clk_DFF_107>.
+    Found 1-bit register for signal <avr_ready_buff>.
+    Found 2-bit register for signal <a_clock>.
+    Found 1-bit register for signal <avr_ready_buff_0>.
+    Found 1-bit register for signal <avr_ready_buff_1>.
+    Found 1-bit register for signal <avr_ready_buff_2>.
+    Found 1-bit register for signal <avr_ready_buff_3>.
+    Found 1-bit register for signal <rzr_2>.
+    Found 1-bit register for signal <direct>.
+    Found 1-bit register for signal <rzr_1>.
+    Found 6-bit register for signal <reg>.
+    Found 15-bit register for signal <spd>.
+    Found 1-bit register for signal <outenable>.
+    Found 15-bit register for signal <spdr>.
+    Found 1-bit register for signal <rzrr>.
+    Found 15-bit register for signal <spd_1>.
+    Found 6-bit register for signal <reg_1>.
+    Found 1-bit register for signal <rzr>.
+    Found 15-bit register for signal <clk_devs>.
+    Found 15-bit register for signal <clk_filter>.
+    Found 15-bit register for signal <clk_filters>.
+    Found 1-bit register for signal <G44_sost>.
+    Found 1-bit register for signal <serato_d>.
+    Found 1-bit register for signal <serato_x>.
+    Found 2-bit register for signal <s_clock>.
+    Found 1-bit register for signal <serato_d_0>.
+    Found 1-bit register for signal <serato_x_0>.
+    Found 1-bit register for signal <serato_d_1>.
+    Found 1-bit register for signal <serato_x_1>.
+    Found 1-bit register for signal <serato_d_2>.
+    Found 1-bit register for signal <serato_x_2>.
+    Found 16-bit register for signal <frame>.
+    Found 3-bit adder for signal <pulse_counter[2]_GND_5_o_add_0_OUT> created at line 148.
+    Found 24-bit adder for signal <radress[23]_GND_5_o_add_22_OUT> created at line 180.
+    Found 24-bit adder for signal <radress[23]_GND_5_o_add_83_OUT> created at line 245.
+    Found 16-bit adder for signal <one_second[15]_GND_5_o_add_85_OUT> created at line 247.
+    Found 24-bit adder for signal <wadress[23]_GND_5_o_add_136_OUT> created at line 316.
+    Found 2-bit adder for signal <a_clock[1]_GND_5_o_add_298_OUT> created at line 403.
+    Found 15-bit adder for signal <spd[14]_GND_5_o_add_306_OUT> created at line 437.
+    Found 6-bit adder for signal <reg[5]_GND_5_o_add_308_OUT> created at line 443.
+    Found 16-bit adder for signal <n1404> created at line 447.
+    Found 15-bit adder for signal <spd_1[14]_GND_5_o_add_318_OUT> created at line 459.
+    Found 6-bit adder for signal <reg_1[5]_GND_5_o_add_320_OUT> created at line 465.
+    Found 16-bit adder for signal <n1411> created at line 469.
+    Found 15-bit adder for signal <clk_dev[14]_GND_5_o_add_339_OUT> created at line 493.
+    Found 15-bit adder for signal <clk_filter[14]_GND_5_o_add_350_OUT> created at line 525.
+    Found 7-bit adder for signal <read_dev[6]_GND_5_o_add_359_OUT> created at line 543.
+    Found 2-bit adder for signal <s_clock[1]_GND_5_o_add_363_OUT> created at line 559.
+    Found 6-bit adder for signal <uart_operation[5]_GND_5_o_add_372_OUT> created at line 699.
+    Found 9-bit adder for signal <uart_dev[8]_GND_5_o_add_389_OUT> created at line 733.
+    Found 24-bit subtractor for signal <GND_5_o_GND_5_o_sub_30_OUT<23:0>> created at line 190.
+    Found 24-bit subtractor for signal <GND_5_o_GND_5_o_sub_98_OUT<23:0>> created at line 258.
+    Found 16-bit subtractor for signal <GND_5_o_GND_5_o_sub_100_OUT<15:0>> created at line 260.
+    Found 15-bit subtractor for signal <GND_5_o_GND_5_o_sub_349_OUT<14:0>> created at line 513.
+    Found 1-bit tristate buffer for signal <RAM_Data<15>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<14>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<13>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<12>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<11>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<10>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<9>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<8>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<7>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<6>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<5>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<4>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<3>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<2>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<1>> created at line 117
+    Found 1-bit tristate buffer for signal <RAM_Data<0>> created at line 117
+    Found 8-bit comparator equal for signal <radress[23]_TRACK_TIME[7]_equal_22_o> created at line 179
+    Found 16-bit comparator equal for signal <radress[23]_LOOP_OUT_reg[15]_equal_78_o> created at line 233
+    Found 24-bit comparator greater for signal <wadress[23]_radress[23]_LessThan_81_o> created at line 242
+    Found 16-bit comparator greater for signal <one_second[15]_PWR_5_o_LessThan_85_o> created at line 246
+    Found 15-bit comparator greater for signal <spdr[14]_GND_5_o_LessThan_143_o> created at line 337
+    Found 2-bit comparator greater for signal <a_clock[1]_PWR_5_o_LessThan_298_o> created at line 402
+    Found 15-bit comparator greater for signal <spd[14]_PWR_5_o_LessThan_306_o> created at line 436
+    Found 15-bit comparator lessequal for signal <GND_5_o_spd_1[14]_LessThan_312_o> created at line 446
+    Found 15-bit comparator greater for signal <spd_1[14]_PWR_5_o_LessThan_318_o> created at line 458
+    Found 15-bit comparator lessequal for signal <GND_5_o_spd[14]_LessThan_324_o> created at line 468
+    Found 15-bit comparator equal for signal <clk_devs[14]_clk_dev[14]_equal_339_o> created at line 488
+    Found 15-bit comparator greater for signal <clk_filters[14]_clk_filter[14]_LessThan_347_o> created at line 508
+    Found 15-bit comparator greater for signal <spdr[14]_GND_5_o_LessThan_348_o> created at line 510
+    Found 2-bit comparator greater for signal <s_clock[1]_PWR_5_o_LessThan_363_o> created at line 558
+    Summary:
+	inferred  20 Adder/Subtractor(s).
+	inferred 458 D-type flip-flop(s).
+	inferred  14 Comparator(s).
+	inferred 370 Multiplexer(s).
+	inferred  16 Tristate(s).
+Unit <Main_assy> synthesized.
+
+=========================================================================
+HDL Synthesis Report
+
+Macro Statistics
+# Adders/Subtractors                                   : 20
+ 15-bit adder                                          : 4
+ 15-bit subtractor                                     : 1
+ 16-bit adder                                          : 2
+ 16-bit addsub                                         : 1
+ 2-bit adder                                           : 2
+ 24-bit adder                                          : 2
+ 24-bit addsub                                         : 1
+ 24-bit subtractor                                     : 1
+ 3-bit adder                                           : 1
+ 6-bit adder                                           : 3
+ 7-bit adder                                           : 1
+ 9-bit adder                                           : 1
+# Registers                                            : 93
+ 1-bit register                                        : 61
+ 10-bit register                                       : 1
+ 13-bit register                                       : 1
+ 15-bit register                                       : 7
+ 16-bit register                                       : 9
+ 2-bit register                                        : 4
+ 24-bit register                                       : 3
+ 3-bit register                                        : 1
+ 6-bit register                                        : 3
+ 7-bit register                                        : 1
+ 8-bit register                                        : 1
+ 9-bit register                                        : 1
+# Comparators                                          : 14
+ 15-bit comparator equal                               : 1
+ 15-bit comparator greater                             : 5
+ 15-bit comparator lessequal                           : 2
+ 16-bit comparator equal                               : 1
+ 16-bit comparator greater                             : 1
+ 2-bit comparator greater                              : 2
+ 24-bit comparator greater                             : 1
+ 8-bit comparator equal                                : 1
+# Multiplexers                                         : 370
+ 1-bit 2-to-1 multiplexer                              : 284
+ 10-bit 2-to-1 multiplexer                             : 42
+ 13-bit 2-to-1 multiplexer                             : 4
+ 15-bit 2-to-1 multiplexer                             : 3
+ 16-bit 2-to-1 multiplexer                             : 20
+ 2-bit 2-to-1 multiplexer                              : 1
+ 24-bit 2-to-1 multiplexer                             : 13
+ 6-bit 2-to-1 multiplexer                              : 1
+ 7-bit 2-to-1 multiplexer                              : 1
+ 9-bit 2-to-1 multiplexer                              : 1
+# Tristates                                            : 16
+ 1-bit tristate buffer                                 : 16
+# Xors                                                 : 7
+ 1-bit xor2                                            : 7
+
+=========================================================================
+INFO:Xst:1767 - HDL ADVISOR - Resource sharing has identified that some arithmetic operations in this design can share the same physical resources for reduced device utilization. For improved clock frequency you may try to disable resource sharing.
+
+=========================================================================
+*                       Advanced HDL Synthesis                          *
+=========================================================================
+
+WARNING:Xst:1710 - FF/Latch <DQM_0> (without init value) has a constant value of 0 in block <Main_assy>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <DQM_1> (without init value) has a constant value of 0 in block <Main_assy>. This FF/Latch will be trimmed during the optimization process.
+
+Synthesizing (advanced) Unit <Main_assy>.
+The following registers are absorbed into counter <read_dev>: 1 register on signal <read_dev>.
+The following registers are absorbed into counter <uart_dev>: 1 register on signal <uart_dev>.
+The following registers are absorbed into counter <a_clock>: 1 register on signal <a_clock>.
+The following registers are absorbed into counter <s_clock>: 1 register on signal <s_clock>.
+The following registers are absorbed into counter <reg>: 1 register on signal <reg>.
+The following registers are absorbed into counter <reg_1>: 1 register on signal <reg_1>.
+The following registers are absorbed into counter <uart_operation>: 1 register on signal <uart_operation>.
+The following registers are absorbed into counter <wadress>: 1 register on signal <wadress>.
+The following registers are absorbed into counter <pulse_counter>: 1 register on signal <pulse_counter>.
+The following registers are absorbed into counter <spd>: 1 register on signal <spd>.
+The following registers are absorbed into counter <spd_1>: 1 register on signal <spd_1>.
+The following registers are absorbed into accumulator <clk_filter>: 1 register on signal <clk_filter>.
+Unit <Main_assy> synthesized (advanced).
+
+=========================================================================
+Advanced HDL Synthesis Report
+
+Macro Statistics
+# Adders/Subtractors                                   : 8
+ 15-bit adder                                          : 1
+ 15-bit subtractor                                     : 1
+ 16-bit adder                                          : 2
+ 16-bit addsub                                         : 1
+ 24-bit adder                                          : 1
+ 24-bit addsub                                         : 1
+ 24-bit subtractor                                     : 1
+# Counters                                             : 11
+ 15-bit up counter                                     : 2
+ 2-bit up counter                                      : 2
+ 24-bit up counter                                     : 1
+ 3-bit up counter                                      : 1
+ 6-bit up counter                                      : 3
+ 7-bit up counter                                      : 1
+ 9-bit up counter                                      : 1
+# Accumulators                                         : 1
+ 15-bit up accumulator                                 : 1
+# Registers                                            : 348
+ Flip-Flops                                            : 348
+# Comparators                                          : 14
+ 15-bit comparator equal                               : 1
+ 15-bit comparator greater                             : 5
+ 15-bit comparator lessequal                           : 2
+ 16-bit comparator equal                               : 1
+ 16-bit comparator greater                             : 1
+ 2-bit comparator greater                              : 2
+ 24-bit comparator greater                             : 1
+ 8-bit comparator equal                                : 1
+# Multiplexers                                         : 382
+ 1-bit 2-to-1 multiplexer                              : 300
+ 10-bit 2-to-1 multiplexer                             : 42
+ 13-bit 2-to-1 multiplexer                             : 4
+ 15-bit 2-to-1 multiplexer                             : 3
+ 16-bit 2-to-1 multiplexer                             : 19
+ 2-bit 2-to-1 multiplexer                              : 1
+ 24-bit 2-to-1 multiplexer                             : 13
+# Xors                                                 : 7
+ 1-bit xor2                                            : 7
+
+=========================================================================
+
+=========================================================================
+*                         Low Level Synthesis                           *
+=========================================================================
+WARNING:Xst:1710 - FF/Latch <DQM_0> (without init value) has a constant value of 0 in block <Main_assy>. This FF/Latch will be trimmed during the optimization process.
+WARNING:Xst:1895 - Due to other FF/Latch trimming, FF/Latch <DQM_1> (without init value) has a constant value of 0 in block <Main_assy>. This FF/Latch will be trimmed during the optimization process.
+INFO:Xst:2261 - The FF/Latch <NXT_clk_DFF_92> in Unit <Main_assy> is equivalent to the following 15 FFs/Latches, which will be removed : <NXT_clk_DFF_93> <NXT_clk_DFF_94> <NXT_clk_DFF_95> <NXT_clk_DFF_96> <NXT_clk_DFF_97> <NXT_clk_DFF_98> <NXT_clk_DFF_99> <NXT_clk_DFF_100> <NXT_clk_DFF_101> <NXT_clk_DFF_102> <NXT_clk_DFF_103> <NXT_clk_DFF_104> <NXT_clk_DFF_105> <NXT_clk_DFF_106> <NXT_clk_DFF_107> 
+
+Optimizing unit <Main_assy> ...
+INFO:Xst:2261 - The FF/Latch <avr_ready_buff_3> in Unit <Main_assy> is equivalent to the following FF/Latch, which will be removed : <avr_ready_buff_0> 
+INFO:Xst:2261 - The FF/Latch <serato_x_2> in Unit <Main_assy> is equivalent to the following FF/Latch, which will be removed : <serato_x_0> 
+INFO:Xst:2261 - The FF/Latch <serato_d_2> in Unit <Main_assy> is equivalent to the following FF/Latch, which will be removed : <serato_d_0> 
+
+Mapping all equations...
+Building and optimizing final netlist ...
+Found area constraint ratio of 100 (+ 5) on block Main_assy, actual ratio is 18.
+FlipFlop read_dev_0 has been replicated 1 time(s)
+FlipFlop read_dev_1 has been replicated 1 time(s)
+FlipFlop read_dev_2 has been replicated 1 time(s)
+FlipFlop read_dev_3 has been replicated 1 time(s)
+FlipFlop read_dev_4 has been replicated 1 time(s)
+FlipFlop read_dev_5 has been replicated 1 time(s)
+FlipFlop srchplus has been replicated 1 time(s)
+FlipFlop sst has been replicated 1 time(s)
+
+Final Macro Processing ...
+
+=========================================================================
+Final Register Report
+
+Macro Statistics
+# Registers                                            : 446
+ Flip-Flops                                            : 446
+
+=========================================================================
+
+=========================================================================
+*                           Partition Report                            *
+=========================================================================
+
+Partition Implementation Status
+-------------------------------
+
+  No Partitions were found in this design.
+
+-------------------------------
+
+=========================================================================
+*                            Design Summary                             *
+=========================================================================
+
+Top Level Output File Name         : Main_assy.ngc
+
+Primitive and Black Box Usage:
+------------------------------
+# BELS                             : 1317
+#      GND                         : 1
+#      INV                         : 54
+#      LUT1                        : 104
+#      LUT2                        : 59
+#      LUT3                        : 116
+#      LUT4                        : 65
+#      LUT5                        : 88
+#      LUT6                        : 354
+#      MUXCY                       : 250
+#      MUXF7                       : 3
+#      VCC                         : 1
+#      XORCY                       : 222
+# FlipFlops/Latches                : 446
+#      FD_1                        : 35
+#      FDC                         : 22
+#      FDC_1                       : 17
+#      FDCE                        : 6
+#      FDCE_1                      : 9
+#      FDE_1                       : 108
+#      FDP_1                       : 1
+#      FDR                         : 16
+#      FDR_1                       : 36
+#      FDRE                        : 70
+#      FDRE_1                      : 121
+#      FDSE                        : 2
+#      FDSE_1                      : 3
+# Clock Buffers                    : 1
+#      BUFGP                       : 1
+# IO Buffers                       : 76
+#      IBUF                        : 18
+#      IOBUF                       : 16
+#      OBUF                        : 42
+
+Device utilization summary:
+---------------------------
+
+Selected Device : 6slx9tqg144-2 
+
+
+Slice Logic Utilization: 
+ Number of Slice Registers:             446  out of  11440     3%  
+ Number of Slice LUTs:                  840  out of   5720    14%  
+    Number used as Logic:               840  out of   5720    14%  
+
+Slice Logic Distribution: 
+ Number of LUT Flip Flop pairs used:   1003
+   Number with an unused Flip Flop:     557  out of   1003    55%  
+   Number with an unused LUT:           163  out of   1003    16%  
+   Number of fully used LUT-FF pairs:   283  out of   1003    28%  
+   Number of unique control sets:        36
+
+IO Utilization: 
+ Number of IOs:                          77
+ Number of bonded IOBs:                  77  out of    102    75%  
+
+Specific Feature Utilization:
+ Number of BUFG/BUFGCTRLs:                1  out of     16     6%  
+
+---------------------------
+Partition Resource Summary:
+---------------------------
+
+  No Partitions were found in this design.
+
+---------------------------
+
+
+=========================================================================
+Timing Report
+
+NOTE: THESE TIMING NUMBERS ARE ONLY A SYNTHESIS ESTIMATE.
+      FOR ACCURATE TIMING INFORMATION PLEASE REFER TO THE TRACE REPORT
+      GENERATED AFTER PLACE-and-ROUTE.
+
+Clock Information:
+------------------
+-----------------------------------+------------------------+-------+
+Clock Signal                       | Clock buffer(FF name)  | Load  |
+-----------------------------------+------------------------+-------+
+clk                                | BUFGP                  | 446   |
+-----------------------------------+------------------------+-------+
+
+Asynchronous Control Signals Information:
+----------------------------------------
+No asynchronous control signals found in this design
+
+Timing Summary:
+---------------
+Speed Grade: -2
+
+   Minimum period: 8.677ns (Maximum Frequency: 115.251MHz)
+   Minimum input arrival time before clock: 6.795ns
+   Maximum output required time after clock: 5.598ns
+   Maximum combinational path delay: No path found
+
+Timing Details:
+---------------
+All values displayed in nanoseconds (ns)
+
+=========================================================================
+Timing constraint: Default period analysis for Clock 'clk'
+  Clock period: 8.677ns (frequency: 115.251MHz)
+  Total number of paths / destination ports: 99471 / 810
+-------------------------------------------------------------------------
+Delay:               8.677ns (Levels of Logic = 23)
+  Source:            radress_11 (FF)
+  Destination:       one_second_15 (FF)
+  Source Clock:      clk falling
+  Destination Clock: clk falling
+
+  Data Path: radress_11 to one_second_15
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FDR_1:C->Q           14   0.525   1.582  radress_11 (radress_11)
+     LUT6:I0->O            1   0.254   0.682  radress[15]_PWR_5_o_equal_83_o<15>1 (radress[15]_PWR_5_o_equal_83_o<15>)
+     LUT6:I5->O           12   0.254   1.177  radress[15]_PWR_5_o_equal_83_o<15>3 (radress[15]_PWR_5_o_equal_83_o)
+     LUT3:I1->O            1   0.250   0.000  Mmux_radress[23]_radress[23]_mux_115_OUT1111_lut (Mmux_radress[23]_radress[23]_mux_115_OUT1111_lut)
+     MUXCY:S->O            1   0.215   0.000  Mmux_radress[23]_radress[23]_mux_115_OUT1111_cy (Mcompar_wadress[23]_radress[23]_LessThan_81_o_cy<11>_l1)
+     MUXCY:CI->O          43   0.023   1.704  Mmux_radress[23]_radress[23]_mux_115_OUT1111_cy1 (Mmux_radress[23]_radress[23]_mux_115_OUT111)
+     LUT6:I5->O            1   0.254   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_lut<0> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_lut<0>)
+     MUXCY:S->O            1   0.215   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<0> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<0>)
+     MUXCY:CI->O           1   0.023   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<1> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<1>)
+     MUXCY:CI->O           1   0.023   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<2> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<2>)
+     MUXCY:CI->O           1   0.023   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<3> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<3>)
+     MUXCY:CI->O           1   0.023   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<4> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<4>)
+     MUXCY:CI->O           1   0.023   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<5> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<5>)
+     MUXCY:CI->O           1   0.023   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<6> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<6>)
+     MUXCY:CI->O           1   0.023   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<7> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<7>)
+     MUXCY:CI->O           1   0.023   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<8> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<8>)
+     MUXCY:CI->O           1   0.023   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<9> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<9>)
+     MUXCY:CI->O           1   0.023   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<10> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<10>)
+     MUXCY:CI->O           1   0.023   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<11> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<11>)
+     MUXCY:CI->O           1   0.023   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<12> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<12>)
+     MUXCY:CI->O           1   0.023   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<13> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<13>)
+     MUXCY:CI->O           0   0.023   0.000  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<14> (Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_cy<14>)
+     XORCY:CI->O           1   0.206   0.682  Mmux_one_second[15]_one_second[15]_mux_108_OUT_rs_xor<15> (one_second[15]_one_second[15]_mux_108_OUT<15>)
+     LUT6:I5->O            1   0.254   0.000  Mmux_one_second[15]_one_second[15]_mux_117_OUT71 (one_second[15]_one_second[15]_mux_117_OUT<15>)
+     FDRE_1:D                  0.074          one_second_15
+    ----------------------------------------
+    Total                      8.677ns (2.850ns logic, 5.827ns route)
+                                       (32.8% logic, 67.2% route)
+
+=========================================================================
+Timing constraint: Default OFFSET IN BEFORE for Clock 'clk'
+  Total number of paths / destination ports: 683 / 514
+-------------------------------------------------------------------------
+Offset:              6.795ns (Levels of Logic = 3)
+  Source:            NXT (PAD)
+  Destination:       BA_0 (FF)
+  Destination Clock: clk falling
+
+  Data Path: NXT to BA_0
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     IBUF:I->O            84   1.328   2.540  NXT_IBUF (NXT_IBUF)
+     LUT6:I0->O           18   0.254   1.235  _n15051 (_n1505)
+     LUT5:I4->O            2   0.254   0.725  Reset_OR_DriverANDClockEnable161 (Reset_OR_DriverANDClockEnable16)
+     FDRE_1:R                  0.459          BA_0
+    ----------------------------------------
+    Total                      6.795ns (2.295ns logic, 4.500ns route)
+                                       (33.8% logic, 66.2% route)
+
+=========================================================================
+Timing constraint: Default OFFSET OUT AFTER for Clock 'clk'
+  Total number of paths / destination ports: 71 / 55
+-------------------------------------------------------------------------
+Offset:              5.598ns (Levels of Logic = 2)
+  Source:            NXT_clk_DFF_92 (FF)
+  Destination:       RAM_Data<15> (PAD)
+  Source Clock:      clk falling
+
+  Data Path: NXT_clk_DFF_92 to RAM_Data<15>
+                                Gate     Net
+    Cell:in->out      fanout   Delay   Delay  Logical Name (Net Name)
+    ----------------------------------------  ------------
+     FD_1:C->Q             2   0.525   0.725  NXT_clk_DFF_92 (NXT_clk_DFF_92)
+     INV:I->O             16   0.255   1.181  NXT_clk_DFF_100_inv1_INV_0 (NXT_clk_DFF_100_inv)
+     IOBUF:T->IO               2.912          RAM_Data_15_IOBUF (RAM_Data<15>)
+    ----------------------------------------
+    Total                      5.598ns (3.692ns logic, 1.906ns route)
+                                       (66.0% logic, 34.0% route)
+
+=========================================================================
+
+Cross Clock Domains Report:
+--------------------------
+
+Clock to Setup on destination clock clk
+---------------+---------+---------+---------+---------+
+               | Src:Rise| Src:Fall| Src:Rise| Src:Fall|
+Source Clock   |Dest:Rise|Dest:Rise|Dest:Fall|Dest:Fall|
+---------------+---------+---------+---------+---------+
+clk            |         |         |    8.677|         |
+---------------+---------+---------+---------+---------+
+
+=========================================================================
+
+
+Total REAL time to Xst completion: 9.00 secs
+Total CPU time to Xst completion: 8.14 secs
+ 
+--> 
+
+Total memory usage is 199764 kilobytes
+
+Number of errors   :    0 (   0 filtered)
+Number of warnings :    4 (   0 filtered)
+Number of infos    :    6 (   0 filtered)
+

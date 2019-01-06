@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<Interface Version="1" Minor="1">
+	<Ifc Id="ROOT" Top="1">
+		<Bus Id="Audio_data">
+			<Port Id="7" Dir="IN"/>
+			<Port Id="6" Dir="IN"/>
+			<Port Id="5" Dir="IN"/>
+			<Port Id="4" Dir="IN"/>
+			<Port Id="3" Dir="IN"/>
+			<Port Id="2" Dir="IN"/>
+			<Port Id="1" Dir="IN"/>
+			<Port Id="0" Dir="IN"/>
+		</Bus>
+		<Bus Id="RAM_Adress">
+			<Port Id="12" Dir="OUT"/>
+			<Port Id="11" Dir="OUT"/>
+			<Port Id="10" Dir="OUT"/>
+			<Port Id="9" Dir="OUT"/>
+			<Port Id="8" Dir="OUT"/>
+			<Port Id="7" Dir="OUT"/>
+			<Port Id="6" Dir="OUT"/>
+			<Port Id="5" Dir="OUT"/>
+			<Port Id="4" Dir="OUT"/>
+			<Port Id="3" Dir="OUT"/>
+			<Port Id="2" Dir="OUT"/>
+			<Port Id="1" Dir="OUT"/>
+			<Port Id="0" Dir="OUT"/>
+		</Bus>
+		<Bus Id="RAM_Data">
+			<Port Id="15" Dir="INOUT"/>
+			<Port Id="14" Dir="INOUT"/>
+			<Port Id="13" Dir="INOUT"/>
+			<Port Id="12" Dir="INOUT"/>
+			<Port Id="11" Dir="INOUT"/>
+			<Port Id="10" Dir="INOUT"/>
+			<Port Id="9" Dir="INOUT"/>
+			<Port Id="8" Dir="INOUT"/>
+			<Port Id="7" Dir="INOUT"/>
+			<Port Id="6" Dir="INOUT"/>
+			<Port Id="5" Dir="INOUT"/>
+			<Port Id="4" Dir="INOUT"/>
+			<Port Id="3" Dir="INOUT"/>
+			<Port Id="2" Dir="INOUT"/>
+			<Port Id="1" Dir="INOUT"/>
+			<Port Id="0" Dir="INOUT"/>
+		</Bus>
+		<Bus Id="BA">
+			<Port Id="1" Dir="OUT"/>
+			<Port Id="0" Dir="OUT"/>
+		</Bus>
+		<Bus Id="DQM">
+			<Port Id="1" Dir="OUT"/>
+			<Port Id="0" Dir="OUT"/>
+		</Bus>
+		<Bus Id="Audio_out">
+			<Port Id="15" Dir="OUT"/>
+			<Port Id="14" Dir="OUT"/>
+			<Port Id="13" Dir="OUT"/>
+			<Port Id="12" Dir="OUT"/>
+			<Port Id="11" Dir="OUT"/>
+			<Port Id="10" Dir="OUT"/>
+			<Port Id="9" Dir="OUT"/>
+			<Port Id="8" Dir="OUT"/>
+			<Port Id="7" Dir="OUT"/>
+			<Port Id="6" Dir="OUT"/>
+			<Port Id="5" Dir="OUT"/>
+			<Port Id="4" Dir="OUT"/>
+			<Port Id="3" Dir="OUT"/>
+			<Port Id="2" Dir="OUT"/>
+			<Port Id="1" Dir="OUT"/>
+			<Port Id="0" Dir="OUT"/>
+		</Bus>
+		<Port Id="RAS" Dir="OUT"/>
+		<Port Id="CAS" Dir="OUT"/>
+		<Port Id="CS" Dir="OUT"/>
+		<Port Id="WE" Dir="OUT"/>
+		<Port Id="RAM_clk" Dir="OUT"/>
+		<Port Id="RAM_clk_en" Dir="OUT"/>
+		<Port Id="serato_L" Dir="IN"/>
+		<Port Id="serato_R" Dir="IN"/>
+		<Port Id="clk" Dir="IN"/>
+		<Port Id="avr_ready" Dir="IN"/>
+		<Port Id="avrclk" Dir="OUT"/>
+		<Port Id="G44" Dir="OUT"/>
+		<Port Id="reset" Dir="IN"/>
+	</Ifc>
+</Interface>
+

@@ -1,0 +1,96 @@
+#CLOCK
+NET "clk" TNM_NET = "clk";
+TIMESPEC ts_clk = PERIOD "clk" 20 ns HIGH 50 %;
+NET "clk" BUFG = CLK;
+NET "clk" LOC = P55;
+
+
+#SDRAM
+NET "RAM_clk" LOC = P143;
+NET "RAM_clk_en" LOC = P144;
+NET "CS" LOC = P48;
+NET "RAS" LOC = P50;
+NET "CAS" LOC = P51;
+NET "WE" LOC = P35;
+NET "DQM[0]" LOC = P142;
+NET "DQM[1]" LOC = P34;
+NET "BA[1]" LOC = P46;
+NET "BA[0]" LOC = P47;
+NET "RAM_Adress[12]" LOC = P1;
+NET "RAM_Adress[11]" LOC = P2;
+NET "RAM_Adress[10]" LOC = P45;
+NET "RAM_Adress[9]" LOC = P5;
+NET "RAM_Adress[8]" LOC = P6;
+NET "RAM_Adress[7]" LOC = P7;
+NET "RAM_Adress[6]" LOC = P8;
+NET "RAM_Adress[5]" LOC = P9;
+NET "RAM_Adress[4]" LOC = P10;
+NET "RAM_Adress[3]" LOC = P40;
+NET "RAM_Adress[2]" LOC = P41;
+NET "RAM_Adress[1]" LOC = P43;
+NET "RAM_Adress[0]" LOC = P44;
+NET "RAM_Data[15]" LOC = P22;
+NET "RAM_Data[14]" LOC = P21;
+NET "RAM_Data[13]" LOC = P17;
+NET "RAM_Data[12]" LOC = P16;
+NET "RAM_Data[11]" LOC = P15;
+NET "RAM_Data[10]" LOC = P14;
+NET "RAM_Data[9]" LOC = P12;
+NET "RAM_Data[8]" LOC = P11;
+NET "RAM_Data[7]" LOC = P33;
+NET "RAM_Data[6]" LOC = P32;
+NET "RAM_Data[5]" LOC = P30;
+NET "RAM_Data[4]" LOC = P29;
+NET "RAM_Data[3]" LOC = P27;
+NET "RAM_Data[2]" LOC = P26;
+NET "RAM_Data[1]" LOC = P24;
+NET "RAM_Data[0]" LOC = P23;
+
+
+#OTHER
+NET "serato_L" LOC = P140;
+NET "serato_R" LOC = P141;
+NET "avr_ready" LOC = P67;
+NET "avrclk" LOC = P59;
+NET "G44" LOC = P139;
+NET "NXT" LOC = P66;
+NET "UART" LOC = P138;
+
+#IO_A Data from ATXmega
+NET "Audio_data[0]" LOC = P87;
+NET "Audio_data[1]" LOC = P84;
+NET "Audio_data[2]" LOC = P82;
+NET "Audio_data[3]" LOC = P80;
+NET "Audio_data[4]" LOC = P79;
+NET "Audio_data[5]" LOC = P78;
+NET "Audio_data[6]" LOC = P75;
+NET "Audio_data[7]" LOC = P74;
+
+
+#IO_A  Audio out 1
+NET "Audio_out[0]" LOC = P88;
+NET "Audio_out[1]" LOC = P92;
+NET "Audio_out[2]" LOC = P93;
+NET "Audio_out[3]" LOC = P94;
+NET "Audio_out[4]" LOC = P95;
+NET "Audio_out[5]" LOC = P97;
+NET "Audio_out[6]" LOC = P98;
+NET "Audio_out[7]" LOC = P99;
+
+#IO_A  Audio out 2
+NET "Audio_out[8]" 	LOC = P114;
+NET "Audio_out[9]" 	LOC = P112;
+NET "Audio_out[10]" LOC = P111;
+NET "Audio_out[11]" LOC = P105;
+NET "Audio_out[12]" LOC = P104;
+NET "Audio_out[13]" LOC = P102;
+NET "Audio_out[14]" LOC = P101;
+NET "Audio_out[15]" LOC = P100;
+
+#INTERFACE ATMEGA
+NET "CUE_A" 		LOC = P120;
+NET "CUE_B" 		LOC = P123;
+NET "REC_PLAY" 		LOC = P121;
+NET "SEARCH" 		LOC = P119;
+NET "LOOP_MARK" 	LOC = P118;
+NET "LOOP_ENABLE" 	LOC = P116;

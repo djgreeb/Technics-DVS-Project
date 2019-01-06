@@ -1,0 +1,204 @@
+//! **************************************************************************
+// Written by: Map O.87xd on Sat Apr 09 01:09:35 2016
+//! **************************************************************************
+
+SCHEMATIC START;
+COMP "NXT" LOCATE = SITE "P66" LEVEL 1;
+COMP "clk" LOCATE = SITE "P55" LEVEL 1;
+COMP "RAM_clk_en" LOCATE = SITE "P144" LEVEL 1;
+COMP "RAM_clk" LOCATE = SITE "P143" LEVEL 1;
+COMP "BA<0>" LOCATE = SITE "P47" LEVEL 1;
+COMP "BA<1>" LOCATE = SITE "P46" LEVEL 1;
+COMP "CUE_A" LOCATE = SITE "P120" LEVEL 1;
+COMP "CUE_B" LOCATE = SITE "P123" LEVEL 1;
+COMP "avr_ready" LOCATE = SITE "P67" LEVEL 1;
+COMP "CS" LOCATE = SITE "P48" LEVEL 1;
+COMP "DQM<0>" LOCATE = SITE "P142" LEVEL 1;
+COMP "DQM<1>" LOCATE = SITE "P34" LEVEL 1;
+COMP "Audio_data<0>" LOCATE = SITE "P87" LEVEL 1;
+COMP "Audio_data<1>" LOCATE = SITE "P84" LEVEL 1;
+COMP "Audio_data<2>" LOCATE = SITE "P82" LEVEL 1;
+COMP "Audio_data<3>" LOCATE = SITE "P80" LEVEL 1;
+COMP "Audio_data<4>" LOCATE = SITE "P79" LEVEL 1;
+COMP "Audio_data<5>" LOCATE = SITE "P78" LEVEL 1;
+COMP "Audio_data<6>" LOCATE = SITE "P75" LEVEL 1;
+COMP "Audio_data<7>" LOCATE = SITE "P74" LEVEL 1;
+COMP "WE" LOCATE = SITE "P35" LEVEL 1;
+COMP "SEARCH" LOCATE = SITE "P119" LEVEL 1;
+COMP "Audio_out<10>" LOCATE = SITE "P111" LEVEL 1;
+COMP "Audio_out<11>" LOCATE = SITE "P105" LEVEL 1;
+COMP "Audio_out<12>" LOCATE = SITE "P104" LEVEL 1;
+COMP "Audio_out<13>" LOCATE = SITE "P102" LEVEL 1;
+COMP "Audio_out<14>" LOCATE = SITE "P101" LEVEL 1;
+COMP "Audio_out<15>" LOCATE = SITE "P100" LEVEL 1;
+COMP "avrclk" LOCATE = SITE "P59" LEVEL 1;
+COMP "Audio_out<0>" LOCATE = SITE "P88" LEVEL 1;
+COMP "Audio_out<1>" LOCATE = SITE "P92" LEVEL 1;
+COMP "Audio_out<2>" LOCATE = SITE "P93" LEVEL 1;
+COMP "Audio_out<3>" LOCATE = SITE "P94" LEVEL 1;
+COMP "Audio_out<4>" LOCATE = SITE "P95" LEVEL 1;
+COMP "Audio_out<5>" LOCATE = SITE "P97" LEVEL 1;
+COMP "Audio_out<6>" LOCATE = SITE "P98" LEVEL 1;
+COMP "Audio_out<7>" LOCATE = SITE "P99" LEVEL 1;
+COMP "Audio_out<8>" LOCATE = SITE "P114" LEVEL 1;
+COMP "Audio_out<9>" LOCATE = SITE "P112" LEVEL 1;
+COMP "G44" LOCATE = SITE "P139" LEVEL 1;
+COMP "serato_L" LOCATE = SITE "P140" LEVEL 1;
+COMP "serato_R" LOCATE = SITE "P141" LEVEL 1;
+COMP "RAM_Adress<10>" LOCATE = SITE "P45" LEVEL 1;
+COMP "RAM_Adress<11>" LOCATE = SITE "P2" LEVEL 1;
+COMP "RAM_Adress<12>" LOCATE = SITE "P1" LEVEL 1;
+COMP "CAS" LOCATE = SITE "P51" LEVEL 1;
+COMP "RAM_Data<10>" LOCATE = SITE "P14" LEVEL 1;
+COMP "RAM_Data<11>" LOCATE = SITE "P15" LEVEL 1;
+COMP "RAM_Data<12>" LOCATE = SITE "P16" LEVEL 1;
+COMP "RAM_Data<13>" LOCATE = SITE "P17" LEVEL 1;
+COMP "RAM_Data<14>" LOCATE = SITE "P21" LEVEL 1;
+COMP "RAM_Data<15>" LOCATE = SITE "P22" LEVEL 1;
+COMP "RAM_Adress<0>" LOCATE = SITE "P44" LEVEL 1;
+COMP "RAM_Adress<1>" LOCATE = SITE "P43" LEVEL 1;
+COMP "RAM_Adress<2>" LOCATE = SITE "P41" LEVEL 1;
+COMP "RAM_Adress<3>" LOCATE = SITE "P40" LEVEL 1;
+COMP "LOOP_ENABLE" LOCATE = SITE "P116" LEVEL 1;
+COMP "RAM_Adress<4>" LOCATE = SITE "P10" LEVEL 1;
+COMP "RAM_Adress<5>" LOCATE = SITE "P9" LEVEL 1;
+COMP "RAM_Adress<6>" LOCATE = SITE "P8" LEVEL 1;
+COMP "RAM_Adress<7>" LOCATE = SITE "P7" LEVEL 1;
+COMP "RAM_Adress<8>" LOCATE = SITE "P6" LEVEL 1;
+COMP "RAM_Adress<9>" LOCATE = SITE "P5" LEVEL 1;
+COMP "RAM_Data<0>" LOCATE = SITE "P23" LEVEL 1;
+COMP "RAM_Data<1>" LOCATE = SITE "P24" LEVEL 1;
+COMP "RAM_Data<2>" LOCATE = SITE "P26" LEVEL 1;
+COMP "RAM_Data<3>" LOCATE = SITE "P27" LEVEL 1;
+COMP "RAM_Data<4>" LOCATE = SITE "P29" LEVEL 1;
+COMP "RAM_Data<5>" LOCATE = SITE "P30" LEVEL 1;
+COMP "RAM_Data<6>" LOCATE = SITE "P32" LEVEL 1;
+COMP "RAM_Data<7>" LOCATE = SITE "P33" LEVEL 1;
+COMP "RAM_Data<8>" LOCATE = SITE "P11" LEVEL 1;
+COMP "RAM_Data<9>" LOCATE = SITE "P12" LEVEL 1;
+COMP "RAS" LOCATE = SITE "P50" LEVEL 1;
+COMP "REC_PLAY" LOCATE = SITE "P121" LEVEL 1;
+COMP "LOOP_MARK" LOCATE = SITE "P118" LEVEL 1;
+COMP "UART" LOCATE = SITE "P138" LEVEL 1;
+TIMEGRP clk = BEL "TRACK_TIME_0" BEL "TRACK_TIME_1" BEL "TRACK_TIME_2" BEL
+        "TRACK_TIME_3" BEL "TRACK_TIME_4" BEL "TRACK_TIME_5" BEL
+        "TRACK_TIME_6" BEL "TRACK_TIME_7" BEL "serato_d_1" BEL "serato_d_2"
+        BEL "serato_x_1" BEL "serato_x_2" BEL "playcue_1" BEL "rzr_1" BEL
+        "LOOP_IN_reg_0" BEL "LOOP_IN_reg_1" BEL "LOOP_IN_reg_2" BEL
+        "LOOP_IN_reg_3" BEL "LOOP_IN_reg_4" BEL "LOOP_IN_reg_5" BEL
+        "LOOP_IN_reg_6" BEL "LOOP_IN_reg_7" BEL "LOOP_IN_reg_8" BEL
+        "LOOP_IN_reg_9" BEL "LOOP_IN_reg_10" BEL "LOOP_IN_reg_11" BEL
+        "LOOP_IN_reg_12" BEL "LOOP_IN_reg_13" BEL "LOOP_IN_reg_14" BEL
+        "LOOP_IN_reg_15" BEL "playcue_2" BEL "CUE_2_0" BEL "CUE_2_1" BEL
+        "CUE_2_2" BEL "CUE_2_3" BEL "CUE_2_4" BEL "CUE_2_5" BEL "CUE_2_6" BEL
+        "CUE_2_7" BEL "CUE_2_8" BEL "CUE_2_9" BEL "CUE_2_10" BEL "CUE_2_11"
+        BEL "CUE_2_12" BEL "CUE_2_13" BEL "CUE_2_14" BEL "CUE_2_15" BEL
+        "Audio_reg_0" BEL "Audio_reg_1" BEL "Audio_reg_2" BEL "Audio_reg_3"
+        BEL "Audio_reg_4" BEL "Audio_reg_5" BEL "Audio_reg_6" BEL
+        "Audio_reg_7" BEL "Audio_reg_8" BEL "Audio_reg_9" BEL "Audio_reg_10"
+        BEL "Audio_reg_11" BEL "Audio_reg_12" BEL "Audio_reg_13" BEL
+        "Audio_reg_14" BEL "Audio_reg_15" BEL "rcue_1" BEL "frame_0" BEL
+        "frame_1" BEL "frame_2" BEL "frame_3" BEL "frame_4" BEL "frame_5" BEL
+        "frame_6" BEL "frame_7" BEL "frame_8" BEL "frame_9" BEL "frame_10" BEL
+        "frame_11" BEL "frame_12" BEL "frame_13" BEL "frame_14" BEL "frame_15"
+        BEL "RAM_Data_0" BEL "RAM_Data_1" BEL "RAM_Data_2" BEL "RAM_Data_3"
+        BEL "RAM_Data_4" BEL "RAM_Data_5" BEL "RAM_Data_6" BEL "RAM_Data_7"
+        BEL "RAM_Data_8" BEL "RAM_Data_9" BEL "RAM_Data_10" BEL "RAM_Data_11"
+        BEL "RAM_Data_12" BEL "RAM_Data_13" BEL "RAM_Data_14" BEL
+        "RAM_Data_15" BEL "rcue_2" BEL "CUE_1_0" BEL "CUE_1_1" BEL "CUE_1_2"
+        BEL "CUE_1_3" BEL "CUE_1_4" BEL "CUE_1_5" BEL "CUE_1_6" BEL "CUE_1_7"
+        BEL "CUE_1_8" BEL "CUE_1_9" BEL "CUE_1_10" BEL "CUE_1_11" BEL
+        "CUE_1_12" BEL "CUE_1_13" BEL "CUE_1_14" BEL "CUE_1_15" BEL
+        "Audio_out_0" BEL "Audio_out_1" BEL "Audio_out_2" BEL "Audio_out_3"
+        BEL "Audio_out_4" BEL "Audio_out_5" BEL "Audio_out_6" BEL
+        "Audio_out_7" BEL "Audio_out_8" BEL "Audio_out_9" BEL "Audio_out_10"
+        BEL "Audio_out_11" BEL "Audio_out_12" BEL "Audio_out_13" BEL
+        "Audio_out_14" BEL "Audio_out_15" BEL "spdr_0" BEL "spdr_1" BEL
+        "spdr_2" BEL "spdr_3" BEL "spdr_4" BEL "spdr_5" BEL "spdr_6" BEL
+        "spdr_7" BEL "spdr_8" BEL "spdr_9" BEL "spdr_10" BEL "spdr_11" BEL
+        "spdr_12" BEL "spdr_13" BEL "spdr_14" BEL "srchminus" BEL "direct" BEL
+        "clk_devs_0" BEL "clk_devs_1" BEL "clk_devs_2" BEL "clk_devs_3" BEL
+        "clk_devs_4" BEL "clk_devs_5" BEL "clk_devs_6" BEL "clk_devs_7" BEL
+        "clk_devs_8" BEL "clk_devs_9" BEL "clk_devs_10" BEL "clk_devs_11" BEL
+        "clk_devs_12" BEL "clk_devs_13" BEL "clk_devs_14" BEL "srchplus" BEL
+        "clk_filters_0" BEL "clk_filters_1" BEL "clk_filters_2" BEL
+        "clk_filters_5" BEL "clk_filters_7" BEL "clk_filters_8" BEL
+        "clk_filters_10" BEL "clk_filters_11" BEL "clk_filters_12" BEL
+        "clk_filters_13" BEL "clk_filters_14" BEL "loopin" BEL "clk_dev_0" BEL
+        "clk_dev_1" BEL "clk_dev_2" BEL "clk_dev_3" BEL "clk_dev_4" BEL
+        "clk_dev_5" BEL "clk_dev_6" BEL "clk_dev_7" BEL "clk_dev_8" BEL
+        "clk_dev_9" BEL "clk_dev_10" BEL "clk_dev_11" BEL "clk_dev_12" BEL
+        "clk_dev_13" BEL "clk_dev_14" BEL "loopout" BEL "loopen" BEL
+        "one_second_0" BEL "one_second_1" BEL "one_second_2" BEL
+        "one_second_3" BEL "one_second_4" BEL "one_second_5" BEL
+        "one_second_6" BEL "one_second_7" BEL "one_second_8" BEL
+        "one_second_9" BEL "one_second_10" BEL "one_second_11" BEL
+        "one_second_12" BEL "one_second_13" BEL "one_second_14" BEL
+        "one_second_15" BEL "radress_0" BEL "radress_1" BEL "radress_2" BEL
+        "radress_3" BEL "radress_4" BEL "radress_5" BEL "radress_6" BEL
+        "radress_7" BEL "radress_8" BEL "radress_9" BEL "radress_10" BEL
+        "radress_11" BEL "radress_12" BEL "radress_13" BEL "radress_14" BEL
+        "radress_15" BEL "radress_16" BEL "radress_17" BEL "radress_18" BEL
+        "radress_19" BEL "radress_20" BEL "radress_21" BEL "radress_22" BEL
+        "radress_23" BEL "radress_t_0" BEL "radress_t_1" BEL "radress_t_2" BEL
+        "radress_t_3" BEL "radress_t_4" BEL "radress_t_5" BEL "radress_t_6"
+        BEL "radress_t_7" BEL "radress_t_8" BEL "radress_t_9" BEL
+        "radress_t_10" BEL "radress_t_11" BEL "radress_t_12" BEL
+        "radress_t_13" BEL "radress_t_14" BEL "radress_t_15" BEL
+        "radress_t_16" BEL "radress_t_17" BEL "radress_t_18" BEL
+        "radress_t_19" BEL "radress_t_20" BEL "radress_t_21" BEL
+        "radress_t_22" BEL "radress_t_23" BEL "LOOP_OUT_reg_0" BEL
+        "LOOP_OUT_reg_1" BEL "LOOP_OUT_reg_2" BEL "LOOP_OUT_reg_3" BEL
+        "LOOP_OUT_reg_4" BEL "LOOP_OUT_reg_5" BEL "LOOP_OUT_reg_6" BEL
+        "LOOP_OUT_reg_7" BEL "LOOP_OUT_reg_8" BEL "LOOP_OUT_reg_9" BEL
+        "LOOP_OUT_reg_10" BEL "LOOP_OUT_reg_11" BEL "LOOP_OUT_reg_12" BEL
+        "LOOP_OUT_reg_13" BEL "LOOP_OUT_reg_14" BEL "LOOP_OUT_reg_15" BEL
+        "BA_0" BEL "BA_1" BEL "RAM_Adress_0" BEL "RAM_Adress_1" BEL
+        "RAM_Adress_2" BEL "RAM_Adress_3" BEL "RAM_Adress_4" BEL
+        "RAM_Adress_5" BEL "RAM_Adress_6" BEL "RAM_Adress_7" BEL
+        "RAM_Adress_8" BEL "RAM_Adress_9" BEL "RAM_Adress_10" BEL
+        "RAM_Adress_11" BEL "RAM_Adress_12" BEL "uart_send_buffer_0" BEL
+        "uart_send_buffer_1" BEL "uart_send_buffer_2" BEL "uart_send_buffer_3"
+        BEL "uart_send_buffer_4" BEL "uart_send_buffer_5" BEL
+        "uart_send_buffer_6" BEL "uart_send_buffer_7" BEL "uart_send_buffer_8"
+        BEL "uart_send_buffer_9" BEL "uart_dev_0" BEL "uart_dev_1" BEL
+        "uart_dev_2" BEL "uart_dev_3" BEL "uart_dev_4" BEL "uart_dev_5" BEL
+        "uart_dev_6" BEL "uart_dev_7" BEL "uart_dev_8" BEL "read_dev_0" BEL
+        "read_dev_1" BEL "read_dev_2" BEL "read_dev_3" BEL "read_dev_4" BEL
+        "read_dev_5" BEL "read_dev_6" BEL "reg_0" BEL "reg_11" BEL "reg_2" BEL
+        "reg_5" BEL "reg_3" BEL "reg_4" BEL "reg_1_0" BEL "reg_1_1" BEL
+        "reg_1_2" BEL "reg_1_3" BEL "reg_1_4" BEL "reg_1_5" BEL
+        "uart_operation_0" BEL "uart_operation_1" BEL "uart_operation_2" BEL
+        "uart_operation_3" BEL "uart_operation_4" BEL "uart_operation_5" BEL
+        "clk_filter_1" BEL "clk_filter_2" BEL "clk_filter_3" BEL
+        "clk_filter_4" BEL "clk_filter_5" BEL "clk_filter_6" BEL
+        "clk_filter_7" BEL "clk_filter_8" BEL "clk_filter_9" BEL
+        "clk_filter_10" BEL "clk_filter_11" BEL "clk_filter_12" BEL
+        "clk_filter_13" BEL "clk_filter_14" BEL "spd_11" BEL "spd_2" BEL
+        "spd_3" BEL "spd_4" BEL "spd_5" BEL "spd_6" BEL "spd_7" BEL "spd_8"
+        BEL "spd_9" BEL "spd_10" BEL "spd_111" BEL "spd_12" BEL "spd_13" BEL
+        "spd_14" BEL "spd_1_1" BEL "spd_1_2" BEL "spd_1_3" BEL "spd_1_4" BEL
+        "spd_1_5" BEL "spd_1_6" BEL "spd_1_7" BEL "spd_1_8" BEL "spd_1_9" BEL
+        "spd_1_10" BEL "spd_1_11" BEL "spd_1_14" BEL "spd_1_12" BEL "spd_1_13"
+        BEL "a_clock_0" BEL "a_clock_1" BEL "s_clock_0" BEL "s_clock_1" BEL
+        "pulse_counter_0" BEL "pulse_counter_1" BEL "pulse_counter_2" BEL
+        "wadress_0" BEL "wadress_1" BEL "wadress_2" BEL "wadress_3" BEL
+        "wadress_4" BEL "wadress_5" BEL "wadress_6" BEL "wadress_7" BEL
+        "wadress_8" BEL "wadress_9" BEL "wadress_10" BEL "wadress_11" BEL
+        "wadress_12" BEL "wadress_13" BEL "wadress_14" BEL "wadress_15" BEL
+        "wadress_16" BEL "wadress_17" BEL "wadress_18" BEL "wadress_19" BEL
+        "wadress_20" BEL "wadress_21" BEL "wadress_22" BEL "wadress_23" BEL
+        "clk_filter_0" BEL "spd_0" BEL "spd_1_0" BEL "rdy" BEL "flagPORT" BEL
+        "RAS" BEL "CS" BEL "flag" BEL "clk_filters_3" BEL "clk_filters_4" BEL
+        "clk_filters_6" BEL "clk_filters_9" BEL "CAS" BEL "sst" BEL "WE" BEL
+        "RAM_clk" BEL "need_frame" BEL "part" BEL "G44" BEL "uart_start_send"
+        BEL "UART" BEL "NXT_clk_DFF_92" BEL "avr_ready_buff_1" BEL
+        "avr_ready_buff_2" BEL "avr_ready_buff_3" BEL "G44_sost" BEL
+        "avr_ready_buff" BEL "outenable" BEL "serato_d" BEL "serato_x" BEL
+        "rzr_2" BEL "need_buffer" BEL "avrclk" BEL "rzrr" BEL "rzr" BEL
+        "read_dev_2_1" BEL "read_dev_3_1" BEL "srchplus_1" BEL "read_dev_1_1"
+        BEL "sst_1" BEL "read_dev_5_1" BEL "read_dev_4_1" BEL "read_dev_0_1"
+        BEL "clk_BUFGP/BUFG";
+ts_clk = PERIOD TIMEGRP "clk" 20 ns HIGH 50%;
+SCHEMATIC END;
+

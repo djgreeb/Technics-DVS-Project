@@ -1,0 +1,60 @@
+#-----------------------------------------------------------
+# PlanAhead v13.4
+# Build 157570 by hdbuild on Fri Dec 16 12:55:36 MST 2011
+# Start of session at: Wed Aug 19 23:27:11 2015
+# Process ID: 1804
+# Log file: C:/Xilinx/Projects/Technics_DVS/planAhead_run_1/planAhead.log
+# Journal file: C:/Xilinx/Projects/Technics_DVS/planAhead_run_1/planAhead.jou
+#-----------------------------------------------------------
+INFO: [Common-78] Attempting to get a license: PlanAhead
+INFO: [Common-82] Got a license: PlanAhead
+INFO: [Common-86] Your PlanAhead license expires in -901 day(s)
+INFO: [Device-25] Loading parts and site information from C:/Xilinx/13.4/ISE_DS/PlanAhead\parts\arch.xmlParsing RTL primitives file [C:/Xilinx/13.4/ISE_DS/PlanAhead\parts\xilinx\rtl\prims\rtl_prims.xml]
+Finished parsing RTL primitives file [C:/Xilinx/13.4/ISE_DS/PlanAhead\parts\xilinx\rtl\prims\rtl_prims.xml]
+start_gui
+source C:/Xilinx/Projects/Technics_DVS/pa.fromHdl.tcl
+# create_project -name DVS -dir "C:/Xilinx/Projects/Technics_DVS/planAhead_run_1" -part xc6slx9tqg144-2
+Parsing template File [C:/Xilinx/13.4/ISE_DS/ISE\data\projnav\templates\verilog.xml].
+Finished parsing template File [C:/Xilinx/13.4/ISE_DS/ISE\data\projnav\templates\verilog.xml].
+Parsing template File [C:/Xilinx/13.4/ISE_DS/ISE\data\projnav\templates\vhdl.xml].
+Finished parsing template File [C:/Xilinx/13.4/ISE_DS/ISE\data\projnav\templates\vhdl.xml].
+Parsing template File [C:/Xilinx/13.4/ISE_DS/ISE\data\projnav\templates\ucf.xml].
+Finished parsing template File [C:/Xilinx/13.4/ISE_DS/ISE\data\projnav\templates\ucf.xml].
+# set_param project.pinAheadLayout yes
+# set srcset [get_property srcset [current_run -impl]]
+# set_property target_constrs_file "C:/Xilinx/Projects/Technics_DVS/DVS/XC6SLX9.ucf" [current_fileset -constrset]
+Adding file 'C:\Xilinx\Projects\Technics_DVS\DVS\XC6SLX9.ucf' to fileset 'constrs_1'
+# set hdlfile [add_files [list {DVS/Main_assy.vhd}]]
+# set_property file_type VHDL $hdlfile
+# set_property library work $hdlfile
+# set_property top Main_assy $srcset
+# add_files [list {C:/Xilinx/Projects/Technics_DVS/DVS/XC6SLX9.ucf}] -fileset [get_property constrset [current_run]]
+# open_rtl_design -part xc6slx9tqg144-2
+INFO: [PlanAhead-58] Using Verific elaboration
+Parsing VHDL file "C:/Xilinx/13.4/ISE_DS/PlanAhead\parts\xilinx\rtl\lib\synplify\synattr.vhd" into library synplify
+Parsing VHDL file "C:/Xilinx/13.4/ISE_DS/PlanAhead\parts\xilinx\rtl\lib\synplify\synattr.vhd" into library synplify
+Parsing VHDL file "C:\Xilinx\Projects\Technics_DVS\DVS\Main_assy.vhd" into library work
+Loading clock regions from C:/Xilinx/13.4/ISE_DS/PlanAhead\parts/xilinx/spartan6/spartan6lx/xc6slx9/ClockRegion.xml
+Loading clock buffers from C:/Xilinx/13.4/ISE_DS/PlanAhead\parts/xilinx/spartan6/spartan6lx/xc6slx9/ClockBuffers.xml
+Loading package pin functions from C:/Xilinx/13.4/ISE_DS/PlanAhead\parts\xilinx\spartan6/PinFunctions.xml...
+Loading package from C:/Xilinx/13.4/ISE_DS/PlanAhead\parts/xilinx/spartan6/spartan6lx/xc6slx9/tqg144/Package.xml
+Loading io standards from C:/Xilinx/13.4/ISE_DS/PlanAhead\./parts/xilinx/spartan6/IOStandards.xml
+Loading device configuration modes from C:/Xilinx/13.4/ISE_DS/PlanAhead\parts\xilinx\spartan6/ConfigModes.xml
+Loading list of drcs for the architecture : C:/Xilinx/13.4/ISE_DS/PlanAhead\./parts/xilinx/spartan6/drc.xml
+Parsing UCF File [C:\Xilinx\Projects\Technics_DVS\DVS\XC6SLX9.ucf]
+Finished Parsing UCF File [C:\Xilinx\Projects\Technics_DVS\DVS\XC6SLX9.ucf]
+INFO: [PlanAhead-566] Unisim Transformation Summary:
+No Unisim elements were transformed.open_rtl_design: Time (s): 5.436w.  Memory (MB): 470.105p 113.172g
+set_property loc "" [get_ports [list  reset]]
+set_property loc "" [get_ports [list  reset]]
+startgroup
+startgroup
+set_property loc PAD75 [get_ports reset]
+set_property loc PAD75 [get_ports reset]
+endgroup
+endgroup
+save_design
+exit
+stop_gui
+INFO: [PlanAhead-261] Exiting PlanAhead...
+INFO: [Common-83] Releasing license: PlanAhead
