@@ -1,0 +1,1527 @@
+;#if __CODEVISIONAVR__ < 3090
+;#error This example requires CodeVisionAVR V3.09 or later
+;#endif
+;
+;#include <io.h>
+;#include <ff.h>
+;#include <delay.h>
+;#include <math.h>
+;//#include <stdio.h>
+;
+;#define SET_B(x) |= (1<<x)  //установить бит X в "1"
+;#define CLR_B(x) &=~(1<<x)  //установить бит X в "0"
+;#define INV_B(x) ^=(1<<x)   //инвертировать бит X
+;
+;FRESULT res;
+;FATFS fat;
+;FIL file;
+;FILINFO finfo;
+;
+;/* file path */
+;char path[]="0:/DVS/1/Track_01.wav";
+
+	.DSEG
+;
+;unsigned int nbytes;
+;unsigned char buffer_1[1536];
+;unsigned char FROM_SD[4];
+;unsigned char FROM_FPGA[4];
+;unsigned char SEND[6];               //буффер для отправки на STM
+;unsigned char WFM[64];               //буффер для отправки WaveForm на STM
+;unsigned int remain;
+;unsigned int b;
+;bit play = 0;                         //разрешение на воспроизведение play=1 - воспроизведение
+;unsigned long flength;
+;bit stt = 0;                          //переменная для защелкивания принятой команды по переключению трека/папки
+;bit nxt = 1;                          //бит определения направления переключения треков или папок
+;bit fldr = 0;                         //бит определения типа переключения (папка/трек)
+;unsigned char FPGA_TRACK_TIME = 0;    //длительность трека для отправки в FPGA
+;unsigned int allsec = 0;               //для вычисления позиции времени на экране
+;unsigned char analyzing=0;
+;unsigned char cnt_uart=0;              //Для счетчика работы UART
+;
+;
+;// System clocks initialization
+;void system_clocks_init(void)
+; 0000 002C {
+
+	.CSEG
+;PCODE: $00000000 VOL: 0
+;PCODE: $00000001 VOL: 0
+; 0000 002D unsigned char n,s;
+; 0000 002E 
+; 0000 002F // Optimize for speed
+; 0000 0030 #pragma optsize-
+; 0000 0031 // Save interrupts enabled/disabled state
+; 0000 0032 s=SREG;
+;PCODE: $00000002 VOL: 0
+;PCODE: $00000003 VOL: 0
+;	n -> R17
+;	s -> R16
+;PCODE: $00000004 VOL: 0
+;PCODE: $00000005 VOL: 0
+; 0000 0033 // Disable interrupts
+; 0000 0034 #asm("cli")
+;PCODE: $00000006 VOL: 0
+	cli
+;PCODE: $00000007 VOL: 0
+; 0000 0035 
+; 0000 0036 // External 16000,000 kHz oscillator initialization
+; 0000 0037 // Crystal oscillator increased drive current: On
+; 0000 0038 // External Clock Source - Startup Time: 0.4-16 MHz Quartz Crystal - 16k CLK
+; 0000 0039 OSC.XOSCCTRL=OSC_FRQRANGE_12TO16_gc | OSC_XOSCPWR_bm | OSC_XOSCSEL_XTAL_16KCLK_gc;
+;PCODE: $00000008 VOL: 0
+;PCODE: $00000009 VOL: 1
+; 0000 003A // Enable the external oscillator/clock source
+; 0000 003B OSC.CTRL|=OSC_XOSCEN_bm;
+;PCODE: $0000000A VOL: 1
+;PCODE: $0000000B VOL: 0
+;PCODE: $0000000C VOL: 1
+; 0000 003C 
+; 0000 003D // Wait for the external oscillator to stabilize
+; 0000 003E while ((OSC.STATUS & OSC_XOSCRDY_bm)==0);
+;PCODE: $0000000D VOL: 0
+;PCODE: $0000000E VOL: 1
+;PCODE: $0000000F VOL: 0
+;PCODE: $00000010 VOL: 0
+;PCODE: $00000011 VOL: 0
+;PCODE: $00000012 VOL: 0
+; 0000 003F 
+; 0000 0040 // PLL initialization
+; 0000 0041 // PLL clock source: External Osc. or Clock
+; 0000 0042 // PLL multiplication factor: 2
+; 0000 0043 // PLL output/2: Off
+; 0000 0044 // PLL frequency: 32,000000 MHz
+; 0000 0045 // Set the PLL clock source and multiplication factor
+; 0000 0046 n=(OSC.PLLCTRL & (~(OSC_PLLSRC_gm | OSC_PLLDIV_bm | OSC_PLLFAC_gm))) |
+; 0000 0047 	OSC_PLLSRC_XOSC_gc | (0<<OSC_PLLDIV_bp) | 2;
+;PCODE: $00000013 VOL: 1
+;PCODE: $00000014 VOL: 0
+;PCODE: $00000015 VOL: 0
+;PCODE: $00000016 VOL: 0
+;PCODE: $00000017 VOL: 0
+;PCODE: $00000018 VOL: 0
+; 0000 0048 CCP=CCP_IOREG_gc;
+;PCODE: $00000019 VOL: 0
+;PCODE: $0000001A VOL: 0
+; 0000 0049 OSC.PLLCTRL=n;
+;PCODE: $0000001B VOL: 1
+;PCODE: $0000001C VOL: 0
+; 0000 004A // Enable the PLL
+; 0000 004B OSC.CTRL|=OSC_PLLEN_bm;
+;PCODE: $0000001D VOL: 1
+;PCODE: $0000001E VOL: 0
+;PCODE: $0000001F VOL: 1
+; 0000 004C 
+; 0000 004D // System Clock prescaler A division factor: 1
+; 0000 004E // System Clock prescalers B & C division factors: B:1, C:1
+; 0000 004F // ClkPer4: 32000,000 kHz
+; 0000 0050 // ClkPer2: 32000,000 kHz
+; 0000 0051 // ClkPer:  32000,000 kHz
+; 0000 0052 // ClkCPU:  32000,000 kHz
+; 0000 0053 n=(CLK.PSCTRL & (~(CLK_PSADIV_gm | CLK_PSBCDIV1_bm | CLK_PSBCDIV0_bm))) |
+; 0000 0054 	CLK_PSADIV_1_gc | CLK_PSBCDIV_1_1_gc;
+;PCODE: $00000020 VOL: 1
+;PCODE: $00000021 VOL: 0
+;PCODE: $00000022 VOL: 0
+;PCODE: $00000023 VOL: 0
+;PCODE: $00000024 VOL: 0
+; 0000 0055 CCP=CCP_IOREG_gc;
+;PCODE: $00000025 VOL: 0
+;PCODE: $00000026 VOL: 0
+; 0000 0056 CLK.PSCTRL=n;
+;PCODE: $00000027 VOL: 1
+;PCODE: $00000028 VOL: 0
+; 0000 0057 
+; 0000 0058 // Wait for the PLL to stabilize
+; 0000 0059 while ((OSC.STATUS & OSC_PLLRDY_bm)==0);
+;PCODE: $00000029 VOL: 0
+;PCODE: $0000002A VOL: 1
+;PCODE: $0000002B VOL: 0
+;PCODE: $0000002C VOL: 0
+;PCODE: $0000002D VOL: 0
+;PCODE: $0000002E VOL: 0
+; 0000 005A 
+; 0000 005B // Select the system clock source: Phase Locked Loop
+; 0000 005C n=(CLK.CTRL & (~CLK_SCLKSEL_gm)) | CLK_SCLKSEL_PLL_gc;
+;PCODE: $0000002F VOL: 1
+;PCODE: $00000030 VOL: 0
+;PCODE: $00000031 VOL: 0
+;PCODE: $00000032 VOL: 0
+; 0000 005D CCP=CCP_IOREG_gc;
+;PCODE: $00000033 VOL: 0
+;PCODE: $00000034 VOL: 0
+; 0000 005E CLK.CTRL=n;
+;PCODE: $00000035 VOL: 1
+;PCODE: $00000036 VOL: 0
+; 0000 005F 
+; 0000 0060 // Disable the unused oscillators: 2 MHz, 32 MHz, internal 32 kHz
+; 0000 0061 OSC.CTRL&= ~(OSC_RC2MEN_bm | OSC_RC32MEN_bm | OSC_RC32KEN_bm);
+;PCODE: $00000037 VOL: 1
+;PCODE: $00000038 VOL: 0
+;PCODE: $00000039 VOL: 1
+; 0000 0062 
+; 0000 0063 // ClkPer output disabled
+; 0000 0064 PORTCFG.CLKEVOUT&= ~(PORTCFG_CLKOUTSEL_gm | PORTCFG_CLKOUT_gm);
+;PCODE: $0000003A VOL: 1
+;PCODE: $0000003B VOL: 0
+;PCODE: $0000003C VOL: 1
+; 0000 0065 // Restore interrupts enabled/disabled state
+; 0000 0066 SREG=s;
+;PCODE: $0000003D VOL: 0
+;PCODE: $0000003E VOL: 0
+; 0000 0067 // Restore optimization for size if needed
+; 0000 0068 #pragma optsize_default
+; 0000 0069 }
+;PCODE: $0000003F VOL: 0
+;PCODE: $00000040 VOL: 0
+;PCODE: $00000041 VOL: 0
+;
+;// RTC initialization
+;void rtcxm_init(void)
+; 0000 006D {
+;PCODE: $00000042 VOL: 0
+;PCODE: $00000043 VOL: 0
+; 0000 006E unsigned char s;
+; 0000 006F 
+; 0000 0070 // RTC clock source: 32.768 kHz from internal RC Oscillator
+; 0000 0071 // Select the clock source and enable the RTC clock
+; 0000 0072 CLK.RTCCTRL=(CLK.RTCCTRL & (~CLK_RTCSRC_gm)) | CLK_RTCSRC_RCOSC32_gc | CLK_RTCEN_bm;
+;PCODE: $00000044 VOL: 0
+;	s -> R17
+;PCODE: $00000045 VOL: 1
+;PCODE: $00000046 VOL: 0
+;PCODE: $00000047 VOL: 0
+;PCODE: $00000048 VOL: 1
+; 0000 0073 // Make sure that the RTC is stopped before initializing it
+; 0000 0074 RTC.CTRL=(RTC.CTRL & (~RTC_PRESCALER_gm)) | RTC_PRESCALER_OFF_gc;
+;PCODE: $00000049 VOL: 1
+;PCODE: $0000004A VOL: 0
+;PCODE: $0000004B VOL: 0
+;PCODE: $0000004C VOL: 1
+; 0000 0075 // Optimize for speed
+; 0000 0076 #pragma optsize-
+; 0000 0077 // Save interrupts enabled/disabled state
+; 0000 0078 s=SREG;
+;PCODE: $0000004D VOL: 0
+;PCODE: $0000004E VOL: 0
+; 0000 0079 // Disable interrupts
+; 0000 007A #asm("cli")
+;PCODE: $0000004F VOL: 0
+	cli
+;PCODE: $00000050 VOL: 0
+; 0000 007B while (RTC.STATUS & RTC_SYNCBUSY_bm);
+;PCODE: $00000051 VOL: 0
+;PCODE: $00000052 VOL: 1
+;PCODE: $00000053 VOL: 0
+;PCODE: $00000054 VOL: 0
+;PCODE: $00000055 VOL: 0
+;PCODE: $00000056 VOL: 0
+; 0000 007C RTC.PER=0x0148;
+;PCODE: $00000057 VOL: 0
+;PCODE: $00000058 VOL: 1
+; 0000 007D RTC.CNT=0x0000;
+;PCODE: $00000059 VOL: 0
+;PCODE: $0000005A VOL: 1
+; 0000 007E RTC.COMP=0x0000;
+;PCODE: $0000005B VOL: 0
+;PCODE: $0000005C VOL: 1
+; 0000 007F SREG=s;
+;PCODE: $0000005D VOL: 0
+;PCODE: $0000005E VOL: 0
+; 0000 0080 #pragma optsize_default
+; 0000 0081 RTC.CTRL=(RTC.CTRL & (~RTC_PRESCALER_gm)) | RTC_PRESCALER_DIV1_gc;
+;PCODE: $0000005F VOL: 1
+;PCODE: $00000060 VOL: 0
+;PCODE: $00000061 VOL: 0
+;PCODE: $00000062 VOL: 1
+; 0000 0082 RTC.INTCTRL=(RTC.INTCTRL & (~(RTC_OVFINTLVL_gm | RTC_COMPINTLVL_gm))) |
+; 0000 0083     RTC_OVFINTLVL_LO_gc | RTC_COMPINTLVL_OFF_gc;
+;PCODE: $00000063 VOL: 1
+;PCODE: $00000064 VOL: 0
+;PCODE: $00000065 VOL: 0
+;PCODE: $00000066 VOL: 0
+;PCODE: $00000067 VOL: 1
+; 0000 0084 }
+;PCODE: $00000068 VOL: 0
+;PCODE: $00000069 VOL: 0
+;PCODE: $0000006A VOL: 0
+;
+;// RTC overflow interrupt service routine every 10ms
+;interrupt [RTC_OVF_vect] void rtcxm_overflow_isr(void)
+; 0000 0088 {
+;PCODE: $0000006B VOL: 0
+;PCODE: $0000006C VOL: 0
+; 0000 0089 disk_timerproc(); // SD card access low level timing function
+;PCODE: $0000006D VOL: 0
+; 0000 008A }
+;PCODE: $0000006E VOL: 0
+;PCODE: $0000006F VOL: 0
+;PCODE: $00000070 VOL: 0
+;
+;// Ports initialization
+;void ports_init(void)
+; 0000 008E {
+;PCODE: $00000071 VOL: 0
+;PCODE: $00000072 VOL: 0
+; 0000 008F // PORTB initialization
+; 0000 0090 // OUT register
+; 0000 0091 PORTB.OUT=0x00;
+;PCODE: $00000073 VOL: 0
+;PCODE: $00000074 VOL: 1
+; 0000 0092 // Pin0: Output
+; 0000 0093 // Pin1: Output
+; 0000 0094 // Pin2: Input
+; 0000 0095 // Pin3: Input
+; 0000 0096 PORTB.DIR=0x03;
+;PCODE: $00000075 VOL: 0
+;PCODE: $00000076 VOL: 1
+; 0000 0097 // Pin0 Output/Pull configuration: Totempole/No
+; 0000 0098 // Pin0 Input/Sense configuration: Sense both edges
+; 0000 0099 // Pin0 Inverted: Off
+; 0000 009A // Pin0 Slew Rate Limitation: Off
+; 0000 009B PORTB.PIN0CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000077 VOL: 0
+;PCODE: $00000078 VOL: 1
+; 0000 009C // Pin1 Output/Pull configuration: Totempole/No
+; 0000 009D // Pin1 Input/Sense configuration: Sense both edges
+; 0000 009E // Pin1 Inverted: Off
+; 0000 009F // Pin1 Slew Rate Limitation: Off
+; 0000 00A0 PORTB.PIN1CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000079 VOL: 0
+;PCODE: $0000007A VOL: 1
+; 0000 00A1 // Pin2 Output/Pull configuration: Totempole/Pull-up (on input)
+; 0000 00A2 // Pin2 Input/Sense configuration: Sense both edges
+; 0000 00A3 // Pin2 Inverted: Off
+; 0000 00A4 // Pin2 Slew Rate Limitation: Off
+; 0000 00A5 PORTB.PIN2CTRL=PORT_OPC_PULLUP_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000007B VOL: 0
+;PCODE: $0000007C VOL: 1
+; 0000 00A6 // Pin3 Output/Pull configuration: Totempole/No
+; 0000 00A7 // Pin3 Input/Sense configuration: Sense rising edge
+; 0000 00A8 // Pin3 Inverted: Off
+; 0000 00A9 // Pin3 Slew Rate Limitation: Off
+; 0000 00AA PORTB.PIN3CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_RISING_gc;
+;PCODE: $0000007D VOL: 0
+;PCODE: $0000007E VOL: 1
+; 0000 00AB // Interrupt 0 level: High
+; 0000 00AC // Interrupt 1 level: Disabled
+; 0000 00AD PORTB.INTCTRL=(PORTB.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 00AE     PORT_INT1LVL_OFF_gc | PORT_INT0LVL_HI_gc;
+;PCODE: $0000007F VOL: 1
+;PCODE: $00000080 VOL: 0
+;PCODE: $00000081 VOL: 0
+;PCODE: $00000082 VOL: 0
+;PCODE: $00000083 VOL: 1
+; 0000 00AF // Pin0 Pin Change interrupt 0: Off
+; 0000 00B0 // Pin1 Pin Change interrupt 0: Off
+; 0000 00B1 // Pin2 Pin Change interrupt 0: Off
+; 0000 00B2 // Pin3 Pin Change interrupt 0: On
+; 0000 00B3 //PORTB.INT0MASK=0x08;
+; 0000 00B4 PORTB.INT0MASK=0x00;
+;PCODE: $00000084 VOL: 0
+;PCODE: $00000085 VOL: 1
+; 0000 00B5 PORTB.INT1MASK=0x00;
+;PCODE: $00000086 VOL: 0
+;PCODE: $00000087 VOL: 1
+; 0000 00B6 
+; 0000 00B7 
+; 0000 00B8 // PORTC initialization
+; 0000 00B9 // OUT register
+; 0000 00BA PORTC.OUT=0x00;
+;PCODE: $00000088 VOL: 0
+;PCODE: $00000089 VOL: 1
+; 0000 00BB // Pin0: Input
+; 0000 00BC // Pin1: Input
+; 0000 00BD // Pin2: Input
+; 0000 00BE // Pin3: Input
+; 0000 00BF // Pin4: Input
+; 0000 00C0 // Pin5: Input
+; 0000 00C1 // Pin6: Input
+; 0000 00C2 // Pin7: Input
+; 0000 00C3 PORTC.DIR=0x00;
+;PCODE: $0000008A VOL: 0
+;PCODE: $0000008B VOL: 1
+; 0000 00C4 // Pin0 Output/Pull configuration: Totempole/Pull-down (on input)
+; 0000 00C5 // Pin0 Input/Sense configuration: Sense both edges
+; 0000 00C6 // Pin0 Inverted: Off
+; 0000 00C7 // Pin0 Slew Rate Limitation: Off
+; 0000 00C8 PORTC.PIN0CTRL=PORT_OPC_PULLDOWN_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000008C VOL: 0
+;PCODE: $0000008D VOL: 1
+; 0000 00C9 // Pin1 Output/Pull configuration: Totempole/Pull-down (on input)
+; 0000 00CA // Pin1 Input/Sense configuration: Sense both edges
+; 0000 00CB // Pin1 Inverted: Off
+; 0000 00CC // Pin1 Slew Rate Limitation: Off
+; 0000 00CD PORTC.PIN1CTRL=PORT_OPC_PULLDOWN_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000008E VOL: 0
+;PCODE: $0000008F VOL: 1
+; 0000 00CE // Pin2 Output/Pull configuration: Totempole/Pull-down (on input)
+; 0000 00CF // Pin2 Input/Sense configuration: Sense both edges
+; 0000 00D0 // Pin2 Inverted: Off
+; 0000 00D1 // Pin2 Slew Rate Limitation: Off
+; 0000 00D2 PORTC.PIN2CTRL=PORT_OPC_PULLDOWN_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000090 VOL: 0
+;PCODE: $00000091 VOL: 1
+; 0000 00D3 // Pin3 Output/Pull configuration: Totempole/Pull-down (on input)
+; 0000 00D4 // Pin3 Input/Sense configuration: Sense both edges
+; 0000 00D5 // Pin3 Inverted: Off
+; 0000 00D6 // Pin3 Slew Rate Limitation: Off
+; 0000 00D7 PORTC.PIN3CTRL=PORT_OPC_PULLDOWN_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000092 VOL: 0
+;PCODE: $00000093 VOL: 1
+; 0000 00D8 // Pin4 Output/Pull configuration: Totempole/No
+; 0000 00D9 // Pin4 Input/Sense configuration: Sense both edges
+; 0000 00DA // Pin4 Inverted: Off
+; 0000 00DB // Pin4 Slew Rate Limitation: Off
+; 0000 00DC PORTC.PIN4CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000094 VOL: 0
+;PCODE: $00000095 VOL: 1
+; 0000 00DD // Pin5 Output/Pull configuration: Totempole/No
+; 0000 00DE // Pin5 Input/Sense configuration: Sense both edges
+; 0000 00DF // Pin5 Inverted: Off
+; 0000 00E0 // Pin5 Slew Rate Limitation: Off
+; 0000 00E1 PORTC.PIN5CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000096 VOL: 0
+;PCODE: $00000097 VOL: 1
+; 0000 00E2 // Pin6 Output/Pull configuration: Totempole/No
+; 0000 00E3 // Pin6 Input/Sense configuration: Sense both edges
+; 0000 00E4 // Pin6 Inverted: Off
+; 0000 00E5 // Pin6 Slew Rate Limitation: Off
+; 0000 00E6 PORTC.PIN6CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $00000098 VOL: 0
+;PCODE: $00000099 VOL: 1
+; 0000 00E7 // Pin7 Output/Pull configuration: Totempole/No
+; 0000 00E8 // Pin7 Input/Sense configuration: Sense both edges
+; 0000 00E9 // Pin7 Inverted: Off
+; 0000 00EA // Pin7 Slew Rate Limitation: Off
+; 0000 00EB PORTC.PIN7CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $0000009A VOL: 0
+;PCODE: $0000009B VOL: 1
+; 0000 00EC // PORTC Peripheral Output Remapping
+; 0000 00ED // OC0A Output: Pin 0
+; 0000 00EE // OC0B Output: Pin 1
+; 0000 00EF // OC0C Output: Pin 2
+; 0000 00F0 // OC0D Output: Pin 3
+; 0000 00F1 // USART0 XCK: Pin 1
+; 0000 00F2 // USART0 RXD: Pin 2
+; 0000 00F3 // USART0 TXD: Pin 3
+; 0000 00F4 // SPI MOSI: Pin 5
+; 0000 00F5 // SPI SCK: Pin 7
+; 0000 00F6 PORTC.REMAP=(0<<PORT_SPI_bp) | (0<<PORT_USART0_bp) | (0<<PORT_TC0D_bp) | (0<<PORT_TC0C_bp) | (0<<PORT_TC0B_bp) | (0<<POR ...
+;PCODE: $0000009C VOL: 0
+;PCODE: $0000009D VOL: 1
+; 0000 00F7 // Interrupt 0 level: Disabled
+; 0000 00F8 // Interrupt 1 level: Disabled
+; 0000 00F9 PORTC.INTCTRL=(PORTC.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 00FA 	PORT_INT1LVL_OFF_gc | PORT_INT0LVL_OFF_gc;
+;PCODE: $0000009E VOL: 1
+;PCODE: $0000009F VOL: 0
+;PCODE: $000000A0 VOL: 0
+;PCODE: $000000A1 VOL: 0
+;PCODE: $000000A2 VOL: 1
+; 0000 00FB // Pin0 Pin Change interrupt 0: Off
+; 0000 00FC // Pin1 Pin Change interrupt 0: Off
+; 0000 00FD // Pin2 Pin Change interrupt 0: Off
+; 0000 00FE // Pin3 Pin Change interrupt 0: Off
+; 0000 00FF // Pin4 Pin Change interrupt 0: Off
+; 0000 0100 // Pin5 Pin Change interrupt 0: Off
+; 0000 0101 // Pin6 Pin Change interrupt 0: Off
+; 0000 0102 // Pin7 Pin Change interrupt 0: Off
+; 0000 0103 PORTC.INT0MASK=0x00;
+;PCODE: $000000A3 VOL: 0
+;PCODE: $000000A4 VOL: 1
+; 0000 0104 // Pin0 Pin Change interrupt 1: Off
+; 0000 0105 // Pin1 Pin Change interrupt 1: Off
+; 0000 0106 // Pin2 Pin Change interrupt 1: Off
+; 0000 0107 // Pin3 Pin Change interrupt 1: Off
+; 0000 0108 // Pin4 Pin Change interrupt 1: Off
+; 0000 0109 // Pin5 Pin Change interrupt 1: Off
+; 0000 010A // Pin6 Pin Change interrupt 1: Off
+; 0000 010B // Pin7 Pin Change interrupt 1: Off
+; 0000 010C PORTC.INT1MASK=0x00;
+;PCODE: $000000A5 VOL: 0
+;PCODE: $000000A6 VOL: 1
+; 0000 010D 
+; 0000 010E 
+; 0000 010F 
+; 0000 0110 // PORTD initialization
+; 0000 0111 // OUT register
+; 0000 0112 PORTD.OUT=0x00;
+;PCODE: $000000A7 VOL: 0
+;PCODE: $000000A8 VOL: 1
+; 0000 0113 //PORTD.DIR=0b11111111;     //порт-передатчик
+; 0000 0114 PORTD.DIR=0b00000000;     //порт-приемник
+;PCODE: $000000A9 VOL: 0
+;PCODE: $000000AA VOL: 1
+; 0000 0115 PORTD.PIN0CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000AB VOL: 0
+;PCODE: $000000AC VOL: 1
+; 0000 0116 PORTD.PIN1CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000AD VOL: 0
+;PCODE: $000000AE VOL: 1
+; 0000 0117 PORTD.PIN2CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000AF VOL: 0
+;PCODE: $000000B0 VOL: 1
+; 0000 0118 PORTD.PIN3CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000B1 VOL: 0
+;PCODE: $000000B2 VOL: 1
+; 0000 0119 PORTD.PIN4CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000B3 VOL: 0
+;PCODE: $000000B4 VOL: 1
+; 0000 011A PORTD.PIN5CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000B5 VOL: 0
+;PCODE: $000000B6 VOL: 1
+; 0000 011B PORTD.PIN6CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000B7 VOL: 0
+;PCODE: $000000B8 VOL: 1
+; 0000 011C PORTD.PIN7CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000B9 VOL: 0
+;PCODE: $000000BA VOL: 1
+; 0000 011D PORTD.INTCTRL=(PORTD.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 011E 	PORT_INT1LVL_OFF_gc | PORT_INT0LVL_OFF_gc;
+;PCODE: $000000BB VOL: 1
+;PCODE: $000000BC VOL: 0
+;PCODE: $000000BD VOL: 0
+;PCODE: $000000BE VOL: 0
+;PCODE: $000000BF VOL: 1
+; 0000 011F PORTD.INT0MASK=0x00;
+;PCODE: $000000C0 VOL: 0
+;PCODE: $000000C1 VOL: 1
+; 0000 0120 PORTD.INT1MASK=0x00;
+;PCODE: $000000C2 VOL: 0
+;PCODE: $000000C3 VOL: 1
+; 0000 0121 
+; 0000 0122 
+; 0000 0123 // PORTE initialization
+; 0000 0124 // OUT register
+; 0000 0125 PORTE.OUT=0x08;
+;PCODE: $000000C4 VOL: 0
+;PCODE: $000000C5 VOL: 1
+; 0000 0126 // Pin0: Input
+; 0000 0127 // Pin1: Input
+; 0000 0128 // Pin2: Input
+; 0000 0129 // Pin3: Output
+; 0000 012A PORTE.DIR=0x08;
+;PCODE: $000000C6 VOL: 0
+;PCODE: $000000C7 VOL: 1
+; 0000 012B // Pin0 Output/Pull configuration: Totempole/No
+; 0000 012C // Pin0 Input/Sense configuration: Sense both edges
+; 0000 012D // Pin0 Inverted: Off
+; 0000 012E // Pin0 Slew Rate Limitation: Off
+; 0000 012F PORTE.PIN0CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000C8 VOL: 0
+;PCODE: $000000C9 VOL: 1
+; 0000 0130 // Pin1 Output/Pull configuration: Totempole/No
+; 0000 0131 // Pin1 Input/Sense configuration: Sense both edges
+; 0000 0132 // Pin1 Inverted: Off
+; 0000 0133 // Pin1 Slew Rate Limitation: Off
+; 0000 0134 PORTE.PIN1CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000CA VOL: 0
+;PCODE: $000000CB VOL: 1
+; 0000 0135 // Pin2 Output/Pull configuration: Totempole/No
+; 0000 0136 // Pin2 Input/Sense configuration: Sense both edges
+; 0000 0137 // Pin2 Inverted: Off
+; 0000 0138 // Pin2 Slew Rate Limitation: Off
+; 0000 0139 PORTE.PIN2CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000CC VOL: 0
+;PCODE: $000000CD VOL: 1
+; 0000 013A // Pin3 Output/Pull configuration: Totempole/No
+; 0000 013B // Pin3 Input/Sense configuration: Sense both edges
+; 0000 013C // Pin3 Inverted: Off
+; 0000 013D // Pin3 Slew Rate Limitation: Off
+; 0000 013E PORTE.PIN3CTRL=PORT_OPC_TOTEM_gc | PORT_ISC_BOTHEDGES_gc;
+;PCODE: $000000CE VOL: 0
+;PCODE: $000000CF VOL: 1
+; 0000 013F // Interrupt 0 level: Disabled
+; 0000 0140 // Interrupt 1 level: Disabled
+; 0000 0141 PORTE.INTCTRL=(PORTE.INTCTRL & (~(PORT_INT1LVL_gm | PORT_INT0LVL_gm))) |
+; 0000 0142 	PORT_INT1LVL_OFF_gc | PORT_INT0LVL_OFF_gc;
+;PCODE: $000000D0 VOL: 1
+;PCODE: $000000D1 VOL: 0
+;PCODE: $000000D2 VOL: 0
+;PCODE: $000000D3 VOL: 0
+;PCODE: $000000D4 VOL: 1
+; 0000 0143 // Pin0 Pin Change interrupt 0: Off
+; 0000 0144 // Pin1 Pin Change interrupt 0: Off
+; 0000 0145 // Pin2 Pin Change interrupt 0: Off
+; 0000 0146 // Pin3 Pin Change interrupt 0: Off
+; 0000 0147 PORTE.INT0MASK=0x00;
+;PCODE: $000000D5 VOL: 0
+;PCODE: $000000D6 VOL: 1
+; 0000 0148 // Pin0 Pin Change interrupt 1: Off
+; 0000 0149 // Pin1 Pin Change interrupt 1: Off
+; 0000 014A // Pin2 Pin Change interrupt 1: Off
+; 0000 014B // Pin3 Pin Change interrupt 1: Off
+; 0000 014C PORTE.INT1MASK=0x00;
+;PCODE: $000000D7 VOL: 0
+;PCODE: $000000D8 VOL: 1
+; 0000 014D }
+;PCODE: $000000D9 VOL: 0
+;PCODE: $000000DA VOL: 0
+;
+;
+;// USARTE0 initialization
+;void usarte0_init(void)
+; 0000 0152 {
+;PCODE: $000000DB VOL: 0
+;PCODE: $000000DC VOL: 0
+; 0000 0153 // Note: The correct PORTE direction for the RxD, TxD and XCK signals
+; 0000 0154 // is configured in the ports_init function.
+; 0000 0155 
+; 0000 0156 // Transmitter is enabled
+; 0000 0157 // Set TxD=1
+; 0000 0158 PORTE.OUTSET=0x08;
+;PCODE: $000000DD VOL: 0
+;PCODE: $000000DE VOL: 1
+; 0000 0159 
+; 0000 015A // Communication mode: Asynchronous USART
+; 0000 015B // Data bits: 8
+; 0000 015C // Stop bits: 1
+; 0000 015D // Parity: Disabled
+; 0000 015E USARTE0.CTRLC=USART_CMODE_ASYNCHRONOUS_gc | USART_PMODE_DISABLED_gc | USART_CHSIZE_8BIT_gc;
+;PCODE: $000000DF VOL: 0
+;PCODE: $000000E0 VOL: 1
+; 0000 015F 
+; 0000 0160 // Receive complete interrupt: Disabled
+; 0000 0161 // Transmit complete interrupt: Disabled
+; 0000 0162 // Data register empty interrupt: Disabled
+; 0000 0163 USARTE0.CTRLA=(USARTE0.CTRLA & (~(USART_RXCINTLVL_gm | USART_TXCINTLVL_gm | USART_DREINTLVL_gm))) |
+; 0000 0164 	USART_RXCINTLVL_OFF_gc | USART_TXCINTLVL_OFF_gc | USART_DREINTLVL_OFF_gc;
+;PCODE: $000000E1 VOL: 1
+;PCODE: $000000E2 VOL: 0
+;PCODE: $000000E3 VOL: 0
+;PCODE: $000000E4 VOL: 0
+;PCODE: $000000E5 VOL: 0
+;PCODE: $000000E6 VOL: 1
+; 0000 0165 
+; 0000 0166 // Required Baud rate: 57600
+; 0000 0167 // Real Baud Rate: 57605,8 (x1 Mode), Error: 0,0 %
+; 0000 0168 USARTE0.BAUDCTRLA=0x2E;
+;PCODE: $000000E7 VOL: 0
+;PCODE: $000000E8 VOL: 1
+; 0000 0169 USARTE0.BAUDCTRLB=((0x09 << USART_BSCALE_gp) & USART_BSCALE_gm) | 0x08;
+;PCODE: $000000E9 VOL: 0
+;PCODE: $000000EA VOL: 1
+; 0000 016A 
+; 0000 016B // Receiver: Off
+; 0000 016C // Transmitter: On
+; 0000 016D // Double transmission speed mode: Off
+; 0000 016E // Multi-processor communication mode: Off
+; 0000 016F USARTE0.CTRLB=(USARTE0.CTRLB & (~(USART_RXEN_bm | USART_TXEN_bm | USART_CLK2X_bm | USART_MPCM_bm | USART_TXB8_bm))) |
+; 0000 0170 	USART_TXEN_bm;
+;PCODE: $000000EB VOL: 1
+;PCODE: $000000EC VOL: 0
+;PCODE: $000000ED VOL: 0
+;PCODE: $000000EE VOL: 1
+; 0000 0171 }
+;PCODE: $000000EF VOL: 0
+;PCODE: $000000F0 VOL: 0
+;
+;// Write a character to the USARTE0 Transmitter
+;#pragma used+
+;void putchar_usarte0(char c)
+; 0000 0176 {
+;PCODE: $000000F1 VOL: 0
+;PCODE: $000000F2 VOL: 0
+; 0000 0177 while ((USARTE0.STATUS & USART_DREIF_bm) == 0);
+;PCODE: $000000F3 VOL: 0
+;	c -> Y+0
+;PCODE: $000000F4 VOL: 0
+;PCODE: $000000F5 VOL: 1
+;PCODE: $000000F6 VOL: 0
+;PCODE: $000000F7 VOL: 0
+;PCODE: $000000F8 VOL: 0
+;PCODE: $000000F9 VOL: 0
+; 0000 0178 USARTE0.DATA=c;
+;PCODE: $000000FA VOL: 0
+;PCODE: $000000FB VOL: 1
+; 0000 0179 }
+;PCODE: $000000FC VOL: 0
+;PCODE: $000000FD VOL: 0
+;PCODE: $000000FE VOL: 0
+;#pragma used-
+;
+;
+;// PORTB interrupt 0 service routine
+;interrupt [PORTB_INT0_vect] void portb_int0_isr(void)
+; 0000 017F {
+;PCODE: $000000FF VOL: 0
+;PCODE: $00000100 VOL: 0
+; 0000 0180 PORTD.OUT = buffer_1[b];
+;PCODE: $00000101 VOL: 0
+;PCODE: $00000102 VOL: 0
+;PCODE: $00000103 VOL: 0
+;PCODE: $00000104 VOL: 1
+; 0000 0181 if (b<1535)
+;PCODE: $00000105 VOL: 0
+;PCODE: $00000106 VOL: 0
+;PCODE: $00000107 VOL: 0
+; 0000 0182     {
+; 0000 0183     b++;
+;PCODE: $00000108 VOL: 0
+;PCODE: $00000109 VOL: 0
+;PCODE: $0000010A VOL: 0
+; 0000 0184     }
+; 0000 0185 else
+;PCODE: $0000010B VOL: 0
+;PCODE: $0000010C VOL: 0
+; 0000 0186     {
+; 0000 0187     PORTB.OUT CLR_B(0);   //PORTB.0 = 0;   (AVR_READY)
+;PCODE: $0000010D VOL: 1
+;PCODE: $0000010E VOL: 0
+;PCODE: $0000010F VOL: 1
+; 0000 0188     b=0;
+;PCODE: $00000110 VOL: 0
+; 0000 0189     }
+;PCODE: $00000111 VOL: 0
+; 0000 018A }
+;PCODE: $00000112 VOL: 0
+;PCODE: $00000113 VOL: 0
+;PCODE: $00000114 VOL: 0
+;
+;
+;
+;void main(void)
+; 0000 018F {
+;PCODE: $00000115 VOL: 0
+; 0000 0190 unsigned char n;
+; 0000 0191 
+; 0000 0192 /* Interrupt system initialization
+; 0000 0193    Optimize for speed */
+; 0000 0194 #pragma optsize-
+; 0000 0195 /* Low level interrupt: On
+; 0000 0196    Round-robin scheduling for low level interrupt: Off
+; 0000 0197    Medium level interrupt: Off
+; 0000 0198    High level interrupt: Off
+; 0000 0199    The interrupt vectors will be placed at the start of the Application FLASH section */
+; 0000 019A n=(PMIC.CTRL & (~(PMIC_RREN_bm | PMIC_IVSEL_bm | PMIC_HILVLEN_bm | PMIC_MEDLVLEN_bm | PMIC_LOLVLEN_bm))) |
+;	n -> R17
+; 0000 019B 	PMIC_LOLVLEN_bm | PMIC_HILVLEN_bm;
+;PCODE: $00000116 VOL: 1
+;PCODE: $00000117 VOL: 0
+;PCODE: $00000118 VOL: 0
+;PCODE: $00000119 VOL: 0
+; 0000 019C CCP=CCP_IOREG_gc;
+;PCODE: $0000011A VOL: 0
+;PCODE: $0000011B VOL: 0
+; 0000 019D PMIC.CTRL=n;
+;PCODE: $0000011C VOL: 1
+;PCODE: $0000011D VOL: 0
+; 0000 019E /* Set the default priority for round-robin scheduling */
+; 0000 019F PMIC.INTPRI=0x00;
+;PCODE: $0000011E VOL: 0
+;PCODE: $0000011F VOL: 1
+; 0000 01A0 /* Restore optimization for size if needed */
+; 0000 01A1 #pragma optsize_default
+; 0000 01A2 
+; 0000 01A3 
+; 0000 01A4 system_clocks_init();
+;PCODE: $00000120 VOL: 0
+; 0000 01A5 rtcxm_init();
+;PCODE: $00000121 VOL: 0
+; 0000 01A6 ports_init();
+;PCODE: $00000122 VOL: 0
+; 0000 01A7 PORTD.DIR=0xFF;    //порт-передатчик
+;PCODE: $00000123 VOL: 0
+;PCODE: $00000124 VOL: 1
+; 0000 01A8 PORTB.OUT CLR_B(0);      //AVR_READY=0;
+;PCODE: $00000125 VOL: 1
+;PCODE: $00000126 VOL: 0
+;PCODE: $00000127 VOL: 1
+; 0000 01A9 PORTB.OUT CLR_B(1);      //RESET ПЛИС  PORTB.1 = 0
+;PCODE: $00000128 VOL: 1
+;PCODE: $00000129 VOL: 0
+;PCODE: $0000012A VOL: 1
+; 0000 01AA b = 0;
+;PCODE: $0000012B VOL: 0
+; 0000 01AB usarte0_init();
+;PCODE: $0000012C VOL: 0
+; 0000 01AC 
+; 0000 01AD 
+; 0000 01AE /* globally enable interrupts */
+; 0000 01AF #asm("sei")
+;PCODE: $0000012D VOL: 0
+	sei
+;PCODE: $0000012E VOL: 0
+; 0000 01B0 
+; 0000 01B1 //search = 0;                            //search это значение b (байта, дискреты)   на поиск фрейма уходит около 330мс
+; 0000 01B2 //if ((res=f_lseek(&file, search))==FR_OK)    /////////так производится перемещение по файлу
+; 0000 01B3 
+; 0000 01B4 if ((res=f_mount(0,&fat))==FR_OK)       //////////монтируем подключенный диск mount logical drive 0:
+;PCODE: $0000012F VOL: 0
+;PCODE: $00000130 VOL: 0
+;PCODE: $00000131 VOL: 0
+;PCODE: $00000132 VOL: 0
+;PCODE: $00000133 VOL: 0
+;PCODE: $00000134 VOL: 0
+;PCODE: $00000135 VOL: 0
+; 0000 01B5     {
+; 0000 01B6     }
+; 0000 01B7 
+; 0000 01B8 delay_ms(2000);                                 //задержка при включении, ждем загрузки ПЛИС и STM
+;PCODE: $00000136 VOL: 0
+;PCODE: $00000137 VOL: 0
+;PCODE: $00000138 VOL: 0
+; 0000 01B9 
+; 0000 01BA while(1)
+;PCODE: $00000139 VOL: 0
+; 0000 01BB {
+; 0000 01BC if ((res=f_open(&file,path,FA_READ))==FR_OK)                /////////////////открываем файл по одресу path для чтения
+;PCODE: $0000013A VOL: 0
+;PCODE: $0000013B VOL: 0
+;PCODE: $0000013C VOL: 0
+;PCODE: $0000013D VOL: 0
+;PCODE: $0000013E VOL: 0
+;PCODE: $0000013F VOL: 0
+;PCODE: $00000140 VOL: 0
+;PCODE: $00000141 VOL: 0
+;PCODE: $00000142 VOL: 0
+; 0000 01BD     {
+; 0000 01BE     SEND[0]=path[7]-48;                               /////номер папки пишем в массив
+;PCODE: $00000143 VOL: 0
+;PCODE: $00000144 VOL: 0
+;PCODE: $00000145 VOL: 0
+;PCODE: $00000146 VOL: 0
+; 0000 01BF     SEND[1]=(10*(path[15]-48))+path[16]-48;           //Отправляем номер трека
+;PCODE: $00000147 VOL: 0
+;PCODE: $00000148 VOL: 0
+;PCODE: $00000149 VOL: 0
+;PCODE: $0000014A VOL: 0
+;PCODE: $0000014B VOL: 0
+;PCODE: $0000014C VOL: 0
+;PCODE: $0000014D VOL: 0
+;PCODE: $0000014E VOL: 0
+;PCODE: $0000014F VOL: 0
+;PCODE: $00000150 VOL: 0
+;PCODE: $00000151 VOL: 0
+;PCODE: $00000152 VOL: 0
+;PCODE: $00000153 VOL: 0
+;PCODE: $00000154 VOL: 0
+; 0000 01C0     if ((res=f_lseek(&file, 55))==FR_OK)               //переход к началу точек в файле
+;PCODE: $00000155 VOL: 0
+;PCODE: $00000156 VOL: 0
+;PCODE: $00000157 VOL: 0
+;PCODE: $00000158 VOL: 0
+;PCODE: $00000159 VOL: 0
+;PCODE: $0000015A VOL: 0
+;PCODE: $0000015B VOL: 0
+; 0000 01C1         {
+; 0000 01C2         if ((res=f_read(&file,FROM_SD,sizeof(FROM_SD),&nbytes))==FR_OK)              ////Вычитываем горячие точки из фай ...
+;PCODE: $0000015C VOL: 0
+;PCODE: $0000015D VOL: 0
+;PCODE: $0000015E VOL: 0
+;PCODE: $0000015F VOL: 0
+;PCODE: $00000160 VOL: 0
+;PCODE: $00000161 VOL: 0
+;PCODE: $00000162 VOL: 0
+;PCODE: $00000163 VOL: 0
+;PCODE: $00000164 VOL: 0
+;PCODE: $00000165 VOL: 0
+;PCODE: $00000166 VOL: 0
+;PCODE: $00000167 VOL: 0
+;PCODE: $00000168 VOL: 0
+;PCODE: $00000169 VOL: 0
+;PCODE: $0000016A VOL: 0
+;PCODE: $0000016B VOL: 0
+; 0000 01C3             {
+; 0000 01C4             if ((res=f_stat(path,&finfo))==FR_OK)
+;PCODE: $0000016C VOL: 0
+;PCODE: $0000016D VOL: 0
+;PCODE: $0000016E VOL: 0
+;PCODE: $0000016F VOL: 0
+;PCODE: $00000170 VOL: 0
+;PCODE: $00000171 VOL: 0
+;PCODE: $00000172 VOL: 0
+; 0000 01C5                 {
+; 0000 01C6                 if ((res=f_read(&file,&analyzing,sizeof(1),&nbytes))==FR_OK)              ////Вычитываем флаг анализиров ...
+;PCODE: $00000173 VOL: 0
+;PCODE: $00000174 VOL: 0
+;PCODE: $00000175 VOL: 0
+;PCODE: $00000176 VOL: 0
+;PCODE: $00000177 VOL: 0
+;PCODE: $00000178 VOL: 0
+;PCODE: $00000179 VOL: 0
+;PCODE: $0000017A VOL: 0
+;PCODE: $0000017B VOL: 0
+;PCODE: $0000017C VOL: 0
+;PCODE: $0000017D VOL: 0
+;PCODE: $0000017E VOL: 0
+;PCODE: $0000017F VOL: 0
+;PCODE: $00000180 VOL: 0
+;PCODE: $00000181 VOL: 0
+;PCODE: $00000182 VOL: 0
+;PCODE: $00000183 VOL: 0
+;PCODE: $00000184 VOL: 0
+; 0000 01C7                     {
+; 0000 01C8                     if ((res=f_read(&file,WFM,sizeof(WFM),&nbytes))==FR_OK)              ////Вычитываем Waveform из трек ...
+;PCODE: $00000185 VOL: 0
+;PCODE: $00000186 VOL: 0
+;PCODE: $00000187 VOL: 0
+;PCODE: $00000188 VOL: 0
+;PCODE: $00000189 VOL: 0
+;PCODE: $0000018A VOL: 0
+;PCODE: $0000018B VOL: 0
+;PCODE: $0000018C VOL: 0
+;PCODE: $0000018D VOL: 0
+;PCODE: $0000018E VOL: 0
+;PCODE: $0000018F VOL: 0
+;PCODE: $00000190 VOL: 0
+;PCODE: $00000191 VOL: 0
+;PCODE: $00000192 VOL: 0
+;PCODE: $00000193 VOL: 0
+;PCODE: $00000194 VOL: 0
+; 0000 01C9                         {
+; 0000 01CA                         flength=finfo.fsize;                     ////вычисление длины файла в байтах
+;PCODE: $00000195 VOL: 0
+;PCODE: $00000196 VOL: 0
+; 0000 01CB                         flength=flength-124;                     //отнимаем от файла размер заголовка
+;PCODE: $00000197 VOL: 0
+;PCODE: $00000198 VOL: 0
+;PCODE: $00000199 VOL: 0
+; 0000 01CC                         remain=flength/1536;                     //определение колечества посылок по 1536 байт
+;PCODE: $0000019A VOL: 0
+;PCODE: $0000019B VOL: 0
+;PCODE: $0000019C VOL: 0
+;PCODE: $0000019D VOL: 0
+; 0000 01CD                         if(flength>33554431)                                //////////////////////////////////////////// ...
+;PCODE: $0000019E VOL: 0
+;PCODE: $0000019F VOL: 0
+;PCODE: $000001A0 VOL: 0
+; 0000 01CE                             {                                               //
+; 0000 01CF                             FPGA_TRACK_TIME = 255;                          //
+;PCODE: $000001A1 VOL: 0
+;PCODE: $000001A2 VOL: 0
+; 0000 01D0                             SEND[2]=(256*FROM_SD[0]+FROM_SD[1])/512;        //
+;PCODE: $000001A3 VOL: 0
+;PCODE: $000001A4 VOL: 0
+;PCODE: $000001A5 VOL: 0
+;PCODE: $000001A6 VOL: 0
+;PCODE: $000001A7 VOL: 0
+;PCODE: $000001A8 VOL: 0
+;PCODE: $000001A9 VOL: 0
+;PCODE: $000001AA VOL: 0
+;PCODE: $000001AB VOL: 0
+;PCODE: $000001AC VOL: 0
+;PCODE: $000001AD VOL: 0
+; 0000 01D1                             SEND[3]=(256*FROM_SD[2]+FROM_SD[3])/512;        //
+;PCODE: $000001AE VOL: 0
+;PCODE: $000001AF VOL: 0
+;PCODE: $000001B0 VOL: 0
+;PCODE: $000001B1 VOL: 0
+;PCODE: $000001B2 VOL: 0
+;PCODE: $000001B3 VOL: 0
+;PCODE: $000001B4 VOL: 0
+;PCODE: $000001B5 VOL: 0
+;PCODE: $000001B6 VOL: 0
+;PCODE: $000001B7 VOL: 0
+;PCODE: $000001B8 VOL: 0
+;PCODE: $000001B9 VOL: 0
+; 0000 01D2                             flength=381;                                    //
+;PCODE: $000001BA VOL: 0
+;PCODE: $000001BB VOL: 0
+; 0000 01D3                             }                                               //    Вычисление временной переменной для от ...
+; 0000 01D4                         else                                                //
+;PCODE: $000001BC VOL: 0
+;PCODE: $000001BD VOL: 0
+; 0000 01D5                             {                                               //
+; 0000 01D6                             FPGA_TRACK_TIME = flength/131587;               //                           и STM
+;PCODE: $000001BE VOL: 0
+;PCODE: $000001BF VOL: 0
+;PCODE: $000001C0 VOL: 0
+;PCODE: $000001C1 VOL: 0
+; 0000 01D7                             allsec=flength/65536;                           //
+;PCODE: $000001C2 VOL: 0
+;PCODE: $000001C3 VOL: 0
+;PCODE: $000001C4 VOL: 0
+;PCODE: $000001C5 VOL: 0
+; 0000 01D8                             SEND[2]=(256*FROM_SD[0]+FROM_SD[1])/allsec;     //
+;PCODE: $000001C6 VOL: 0
+;PCODE: $000001C7 VOL: 0
+;PCODE: $000001C8 VOL: 0
+;PCODE: $000001C9 VOL: 0
+;PCODE: $000001CA VOL: 0
+;PCODE: $000001CB VOL: 0
+;PCODE: $000001CC VOL: 0
+;PCODE: $000001CD VOL: 0
+;PCODE: $000001CE VOL: 0
+;PCODE: $000001CF VOL: 0
+;PCODE: $000001D0 VOL: 0
+; 0000 01D9                             SEND[3]=(256*FROM_SD[2]+FROM_SD[3])/allsec;     //
+;PCODE: $000001D1 VOL: 0
+;PCODE: $000001D2 VOL: 0
+;PCODE: $000001D3 VOL: 0
+;PCODE: $000001D4 VOL: 0
+;PCODE: $000001D5 VOL: 0
+;PCODE: $000001D6 VOL: 0
+;PCODE: $000001D7 VOL: 0
+;PCODE: $000001D8 VOL: 0
+;PCODE: $000001D9 VOL: 0
+;PCODE: $000001DA VOL: 0
+;PCODE: $000001DB VOL: 0
+;PCODE: $000001DC VOL: 0
+; 0000 01DA                             flength=flength/88200;                          //
+;PCODE: $000001DD VOL: 0
+;PCODE: $000001DE VOL: 0
+;PCODE: $000001DF VOL: 0
+;PCODE: $000001E0 VOL: 0
+; 0000 01DB                             }                                               //////////////////////////////////////////// ...
+;PCODE: $000001E1 VOL: 0
+; 0000 01DC                         SEND[4]=flength/256;
+;PCODE: $000001E2 VOL: 0
+;PCODE: $000001E3 VOL: 0
+;PCODE: $000001E4 VOL: 0
+;PCODE: $000001E5 VOL: 0
+;PCODE: $000001E6 VOL: 0
+; 0000 01DD                         SEND[5]=flength%256;
+;PCODE: $000001E7 VOL: 0
+;PCODE: $000001E8 VOL: 0
+;PCODE: $000001E9 VOL: 0
+;PCODE: $000001EA VOL: 0
+; 0000 01DE                         if(!(analyzing==170))           /////если трек оказался не проанализирован, то место в буффере,  ...
+;PCODE: $000001EB VOL: 0
+;PCODE: $000001EC VOL: 0
+;PCODE: $000001ED VOL: 0
+; 0000 01DF                             {
+; 0000 01E0                             cnt_uart=0;
+;PCODE: $000001EE VOL: 0
+; 0000 01E1                             while(cnt_uart<64)
+;PCODE: $000001EF VOL: 0
+;PCODE: $000001F0 VOL: 0
+;PCODE: $000001F1 VOL: 0
+;PCODE: $000001F2 VOL: 0
+; 0000 01E2                                 {
+; 0000 01E3                                 WFM[cnt_uart]=0;
+;PCODE: $000001F3 VOL: 0
+;PCODE: $000001F4 VOL: 0
+;PCODE: $000001F5 VOL: 0
+;PCODE: $000001F6 VOL: 0
+;PCODE: $000001F7 VOL: 0
+; 0000 01E4                                 cnt_uart++;
+;PCODE: $000001F8 VOL: 0
+; 0000 01E5                                 }
+;PCODE: $000001F9 VOL: 0
+;PCODE: $000001FA VOL: 0
+; 0000 01E6                             }
+; 0000 01E7                         cnt_uart=0;
+;PCODE: $000001FB VOL: 0
+;PCODE: $000001FC VOL: 0
+; 0000 01E8                         while(cnt_uart<70)
+;PCODE: $000001FD VOL: 0
+;PCODE: $000001FE VOL: 0
+;PCODE: $000001FF VOL: 0
+;PCODE: $00000200 VOL: 0
+; 0000 01E9                             {
+; 0000 01EA                             if(cnt_uart<64)
+;PCODE: $00000201 VOL: 0
+;PCODE: $00000202 VOL: 0
+;PCODE: $00000203 VOL: 0
+; 0000 01EB                                 {
+; 0000 01EC                                 putchar_usarte0(WFM[cnt_uart]);
+;PCODE: $00000204 VOL: 0
+;PCODE: $00000205 VOL: 0
+;PCODE: $00000206 VOL: 0
+;PCODE: $00000207 VOL: 0
+;PCODE: $00000208 VOL: 0
+; 0000 01ED                                 }
+; 0000 01EE                             else
+;PCODE: $00000209 VOL: 0
+;PCODE: $0000020A VOL: 0
+; 0000 01EF                                 {
+; 0000 01F0                                 putchar_usarte0(SEND[cnt_uart-64]);
+;PCODE: $0000020B VOL: 0
+;PCODE: $0000020C VOL: 0
+;PCODE: $0000020D VOL: 0
+;PCODE: $0000020E VOL: 0
+;PCODE: $0000020F VOL: 0
+;PCODE: $00000210 VOL: 0
+; 0000 01F1                                 }
+;PCODE: $00000211 VOL: 0
+; 0000 01F2                             cnt_uart++;
+;PCODE: $00000212 VOL: 0
+; 0000 01F3                             }
+;PCODE: $00000213 VOL: 0
+;PCODE: $00000214 VOL: 0
+; 0000 01F4 
+; 0000 01F5                         PORTD.OUT=FROM_SD[0];
+;PCODE: $00000215 VOL: 0
+;PCODE: $00000216 VOL: 1
+; 0000 01F6                         delay_us(1);
+;PCODE: $00000217 VOL: 0
+; 0000 01F7                         PORTB.OUT SET_B(0);      //AVR_READY=1;
+;PCODE: $00000218 VOL: 1
+;PCODE: $00000219 VOL: 0
+;PCODE: $0000021A VOL: 1
+; 0000 01F8                         delay_us(1);
+;PCODE: $0000021B VOL: 0
+; 0000 01F9                         PORTB.OUT CLR_B(0);      //AVR_READY=0;
+;PCODE: $0000021C VOL: 1
+;PCODE: $0000021D VOL: 0
+;PCODE: $0000021E VOL: 1
+; 0000 01FA                         PORTD.OUT=FROM_SD[1];
+;PCODE: $0000021F VOL: 0
+;PCODE: $00000220 VOL: 0
+;PCODE: $00000221 VOL: 1
+; 0000 01FB                         delay_us(1);
+;PCODE: $00000222 VOL: 0
+; 0000 01FC                         PORTB.OUT SET_B(0);      //AVR_READY=1;
+;PCODE: $00000223 VOL: 1
+;PCODE: $00000224 VOL: 0
+;PCODE: $00000225 VOL: 1
+; 0000 01FD                         delay_us(1);
+;PCODE: $00000226 VOL: 0
+; 0000 01FE                         PORTB.OUT CLR_B(0);      //AVR_READY=0;
+;PCODE: $00000227 VOL: 1
+;PCODE: $00000228 VOL: 0
+;PCODE: $00000229 VOL: 1
+; 0000 01FF                         PORTD.OUT=FROM_SD[2];
+;PCODE: $0000022A VOL: 0
+;PCODE: $0000022B VOL: 0
+;PCODE: $0000022C VOL: 1
+; 0000 0200                         delay_us(1);
+;PCODE: $0000022D VOL: 0
+; 0000 0201                         PORTB.OUT SET_B(0);      //AVR_READY=1;
+;PCODE: $0000022E VOL: 1
+;PCODE: $0000022F VOL: 0
+;PCODE: $00000230 VOL: 1
+; 0000 0202                         delay_us(1);
+;PCODE: $00000231 VOL: 0
+; 0000 0203                         PORTB.OUT CLR_B(0);      //AVR_READY=0;
+;PCODE: $00000232 VOL: 1
+;PCODE: $00000233 VOL: 0
+;PCODE: $00000234 VOL: 1
+; 0000 0204                         PORTD.OUT=FROM_SD[3];
+;PCODE: $00000235 VOL: 0
+;PCODE: $00000236 VOL: 0
+;PCODE: $00000237 VOL: 1
+; 0000 0205                         delay_us(1);
+;PCODE: $00000238 VOL: 0
+; 0000 0206                         PORTB.OUT SET_B(0);      //AVR_READY=1;
+;PCODE: $00000239 VOL: 1
+;PCODE: $0000023A VOL: 0
+;PCODE: $0000023B VOL: 1
+; 0000 0207                         delay_us(1);
+;PCODE: $0000023C VOL: 0
+; 0000 0208                         PORTB.OUT CLR_B(0);      //AVR_READY=0;
+;PCODE: $0000023D VOL: 1
+;PCODE: $0000023E VOL: 0
+;PCODE: $0000023F VOL: 1
+; 0000 0209                         PORTD.OUT=FPGA_TRACK_TIME;               /////// отправка временной переменной для FPGA
+;PCODE: $00000240 VOL: 1
+;PCODE: $00000241 VOL: 0
+; 0000 020A                         delay_us(1);
+;PCODE: $00000242 VOL: 0
+; 0000 020B                         PORTB.OUT SET_B(0);      //AVR_READY=1;
+;PCODE: $00000243 VOL: 1
+;PCODE: $00000244 VOL: 0
+;PCODE: $00000245 VOL: 1
+; 0000 020C                         delay_us(1);
+;PCODE: $00000246 VOL: 0
+; 0000 020D                         PORTB.OUT CLR_B(0);      //AVR_READY=0;
+;PCODE: $00000247 VOL: 1
+;PCODE: $00000248 VOL: 0
+;PCODE: $00000249 VOL: 1
+; 0000 020E                         delay_us(1);
+;PCODE: $0000024A VOL: 0
+; 0000 020F                         play = 1;
+;PCODE: $0000024B VOL: 0
+;PCODE: $0000024C VOL: 0
+; 0000 0210                         PORTB.OUT SET_B(1);                   //PORTB.1 = 1  снимаем RESET CPLD
+;PCODE: $0000024D VOL: 1
+;PCODE: $0000024E VOL: 0
+;PCODE: $0000024F VOL: 1
+; 0000 0211                         PORTB.INT0MASK=0x08;                  //включения прерывания
+;PCODE: $00000250 VOL: 0
+;PCODE: $00000251 VOL: 1
+; 0000 0212                         }
+; 0000 0213                     }
+;PCODE: $00000252 VOL: 0
+; 0000 0214                 }
+;PCODE: $00000253 VOL: 0
+; 0000 0215             }
+;PCODE: $00000254 VOL: 0
+; 0000 0216         }
+;PCODE: $00000255 VOL: 0
+; 0000 0217     }
+;PCODE: $00000256 VOL: 0
+; 0000 0218 else
+;PCODE: $00000257 VOL: 0
+;PCODE: $00000258 VOL: 0
+; 0000 0219     {
+; 0000 021A     PORTB.OUT CLR_B(1);                                   //PORTB.1 = 0
+;PCODE: $00000259 VOL: 1
+;PCODE: $0000025A VOL: 0
+;PCODE: $0000025B VOL: 1
+; 0000 021B     }
+;PCODE: $0000025C VOL: 0
+; 0000 021C 
+; 0000 021D while(play)
+;PCODE: $0000025D VOL: 0
+;PCODE: $0000025E VOL: 0
+;PCODE: $0000025F VOL: 0
+;PCODE: $00000260 VOL: 0
+; 0000 021E     {
+; 0000 021F     if(!(PORTB.OUT&1<<0))
+;PCODE: $00000261 VOL: 1
+;PCODE: $00000262 VOL: 0
+;PCODE: $00000263 VOL: 0
+; 0000 0220         {
+; 0000 0221         if ((res=f_read(&file,buffer_1,sizeof(buffer_1),&nbytes))==FR_OK)              ////зачитываем данные и пишем в b ...
+;PCODE: $00000264 VOL: 0
+;PCODE: $00000265 VOL: 0
+;PCODE: $00000266 VOL: 0
+;PCODE: $00000267 VOL: 0
+;PCODE: $00000268 VOL: 0
+;PCODE: $00000269 VOL: 0
+;PCODE: $0000026A VOL: 0
+;PCODE: $0000026B VOL: 0
+;PCODE: $0000026C VOL: 0
+;PCODE: $0000026D VOL: 0
+;PCODE: $0000026E VOL: 0
+;PCODE: $0000026F VOL: 0
+;PCODE: $00000270 VOL: 0
+;PCODE: $00000271 VOL: 0
+;PCODE: $00000272 VOL: 0
+;PCODE: $00000273 VOL: 0
+; 0000 0222             {
+; 0000 0223             PORTB.OUT SET_B(0);        //PORTB.0 = 1    (AVR_READY)
+;PCODE: $00000274 VOL: 1
+;PCODE: $00000275 VOL: 0
+;PCODE: $00000276 VOL: 1
+; 0000 0224             if(remain==0)
+;PCODE: $00000277 VOL: 0
+;PCODE: $00000278 VOL: 0
+; 0000 0225                 {
+; 0000 0226                 PORTB.INT0MASK=0x00;    //отключаем прерывание
+;PCODE: $00000279 VOL: 0
+;PCODE: $0000027A VOL: 1
+; 0000 0227                 if ((res=f_close(&file))==FR_OK)     ///////////////////закрываем файл
+;PCODE: $0000027B VOL: 0
+;PCODE: $0000027C VOL: 0
+;PCODE: $0000027D VOL: 0
+;PCODE: $0000027E VOL: 0
+;PCODE: $0000027F VOL: 0
+; 0000 0228                     {}
+; 0000 0229                 }
+;PCODE: $00000280 VOL: 0
+; 0000 022A             else
+;PCODE: $00000281 VOL: 0
+;PCODE: $00000282 VOL: 0
+; 0000 022B                 {
+; 0000 022C                 remain--;
+;PCODE: $00000283 VOL: 0
+;PCODE: $00000284 VOL: 0
+;PCODE: $00000285 VOL: 0
+;PCODE: $00000286 VOL: 0
+; 0000 022D                 }
+;PCODE: $00000287 VOL: 0
+; 0000 022E             }
+; 0000 022F         }
+;PCODE: $00000288 VOL: 0
+; 0000 0230 
+; 0000 0231     if((PORTC.IN&1<<1 || PORTC.IN&1<<2) & stt==0)             //нажали клавишу NEXT or FF     PINC.1 или PINC.2
+;PCODE: $00000289 VOL: 0
+;PCODE: $0000028A VOL: 1
+;PCODE: $0000028B VOL: 0
+;PCODE: $0000028C VOL: 0
+;PCODE: $0000028D VOL: 1
+;PCODE: $0000028E VOL: 0
+;PCODE: $0000028F VOL: 0
+;PCODE: $00000290 VOL: 0
+;PCODE: $00000291 VOL: 0
+;PCODE: $00000292 VOL: 0
+;PCODE: $00000293 VOL: 0
+;PCODE: $00000294 VOL: 0
+;PCODE: $00000295 VOL: 0
+;PCODE: $00000296 VOL: 0
+;PCODE: $00000297 VOL: 0
+;PCODE: $00000298 VOL: 0
+;PCODE: $00000299 VOL: 0
+;PCODE: $0000029A VOL: 0
+;PCODE: $0000029B VOL: 0
+; 0000 0232         {
+; 0000 0233         PORTB.OUT CLR_B(0);      //AVR_READY=0;
+;PCODE: $0000029C VOL: 1
+;PCODE: $0000029D VOL: 0
+;PCODE: $0000029E VOL: 1
+; 0000 0234         if(PORTC.IN&1<<1)
+;PCODE: $0000029F VOL: 1
+;PCODE: $000002A0 VOL: 0
+;PCODE: $000002A1 VOL: 0
+; 0000 0235             {
+; 0000 0236             nxt=1;              //переключаем следующий трек или папку
+;PCODE: $000002A2 VOL: 0
+;PCODE: $000002A3 VOL: 0
+; 0000 0237             }
+; 0000 0238         else
+;PCODE: $000002A4 VOL: 0
+;PCODE: $000002A5 VOL: 0
+; 0000 0239             {
+; 0000 023A             nxt=0;             //переключаем следующий трек или папку
+;PCODE: $000002A6 VOL: 0
+;PCODE: $000002A7 VOL: 0
+; 0000 023B             }
+;PCODE: $000002A8 VOL: 0
+; 0000 023C         fldr=PORTC.IN&1<<3;
+;PCODE: $000002A9 VOL: 1
+;PCODE: $000002AA VOL: 0
+;PCODE: $000002AB VOL: 0
+;PCODE: $000002AC VOL: 0
+;PCODE: $000002AD VOL: 0
+;PCODE: $000002AE VOL: 0
+;PCODE: $000002AF VOL: 0
+;PCODE: $000002B0 VOL: 0
+;PCODE: $000002B1 VOL: 0
+;PCODE: $000002B2 VOL: 0
+; 0000 023D         play = 0;
+;PCODE: $000002B3 VOL: 0
+;PCODE: $000002B4 VOL: 0
+; 0000 023E         stt = 1;
+;PCODE: $000002B5 VOL: 0
+;PCODE: $000002B6 VOL: 0
+; 0000 023F         PORTB.INT0MASK=0x00;     //отключаем прерывание
+;PCODE: $000002B7 VOL: 0
+;PCODE: $000002B8 VOL: 1
+; 0000 0240         if ((res=f_close(&file))==FR_OK)     ///////////////////закрываем файл
+;PCODE: $000002B9 VOL: 0
+;PCODE: $000002BA VOL: 0
+;PCODE: $000002BB VOL: 0
+;PCODE: $000002BC VOL: 0
+;PCODE: $000002BD VOL: 0
+; 0000 0241         b = 0;
+;PCODE: $000002BE VOL: 0
+; 0000 0242         PORTB.OUT CLR_B(1);      //RESET ПЛИС  //PORTB.1 = 0
+;PCODE: $000002BF VOL: 0
+;PCODE: $000002C0 VOL: 1
+;PCODE: $000002C1 VOL: 0
+;PCODE: $000002C2 VOL: 1
+; 0000 0243         ////delay_ms(10);           /// задержка нажатия клавиши. для цифрового кода не нужна
+; 0000 0244         }
+; 0000 0245 
+; 0000 0246     if((!(PORTC.IN&1<<1)) & (!(PORTC.IN&1<<2)))                           //отпустили клавишу NEXT or FF
+;PCODE: $000002C3 VOL: 0
+;PCODE: $000002C4 VOL: 1
+;PCODE: $000002C5 VOL: 0
+;PCODE: $000002C6 VOL: 0
+;PCODE: $000002C7 VOL: 0
+;PCODE: $000002C8 VOL: 1
+;PCODE: $000002C9 VOL: 0
+;PCODE: $000002CA VOL: 0
+;PCODE: $000002CB VOL: 0
+;PCODE: $000002CC VOL: 0
+; 0000 0247         {
+; 0000 0248         stt = 0;
+;PCODE: $000002CD VOL: 0
+;PCODE: $000002CE VOL: 0
+; 0000 0249         }
+; 0000 024A     }
+;PCODE: $000002CF VOL: 0
+;PCODE: $000002D0 VOL: 0
+;PCODE: $000002D1 VOL: 0
+; 0000 024B 
+; 0000 024C 
+; 0000 024D if(fldr==1)                          /////////////////////////////////////////////////////////////переключение треков и  ...
+;PCODE: $000002D2 VOL: 0
+;PCODE: $000002D3 VOL: 0
+;PCODE: $000002D4 VOL: 0
+; 0000 024E     {
+; 0000 024F     fldr=0;
+;PCODE: $000002D5 VOL: 0
+;PCODE: $000002D6 VOL: 0
+; 0000 0250     path[15]=48;                    //выставляем Track_01
+;PCODE: $000002D7 VOL: 0
+;PCODE: $000002D8 VOL: 0
+;PCODE: $000002D9 VOL: 0
+; 0000 0251     path[16]=49;                    //
+;PCODE: $000002DA VOL: 0
+;PCODE: $000002DB VOL: 0
+;PCODE: $000002DC VOL: 0
+; 0000 0252     if(nxt)
+;PCODE: $000002DD VOL: 0
+;PCODE: $000002DE VOL: 0
+;PCODE: $000002DF VOL: 0
+; 0000 0253         {
+; 0000 0254         if(path[7]==54)
+;PCODE: $000002E0 VOL: 0
+;PCODE: $000002E1 VOL: 0
+;PCODE: $000002E2 VOL: 0
+;PCODE: $000002E3 VOL: 0
+; 0000 0255             {
+; 0000 0256             path[7]=49;
+;PCODE: $000002E4 VOL: 0
+;PCODE: $000002E5 VOL: 0
+;PCODE: $000002E6 VOL: 0
+; 0000 0257             }
+; 0000 0258         else
+;PCODE: $000002E7 VOL: 0
+;PCODE: $000002E8 VOL: 0
+; 0000 0259             {
+; 0000 025A             path[7]++;
+;PCODE: $000002E9 VOL: 0
+;PCODE: $000002EA VOL: 0
+;PCODE: $000002EB VOL: 0
+;PCODE: $000002EC VOL: 0
+;PCODE: $000002ED VOL: 0
+; 0000 025B             }
+;PCODE: $000002EE VOL: 0
+; 0000 025C         }
+; 0000 025D     else
+;PCODE: $000002EF VOL: 0
+;PCODE: $000002F0 VOL: 0
+; 0000 025E         {
+; 0000 025F         nxt=1;
+;PCODE: $000002F1 VOL: 0
+;PCODE: $000002F2 VOL: 0
+; 0000 0260         if(path[7]==49)
+;PCODE: $000002F3 VOL: 0
+;PCODE: $000002F4 VOL: 0
+;PCODE: $000002F5 VOL: 0
+;PCODE: $000002F6 VOL: 0
+; 0000 0261             {
+; 0000 0262             path[7]=54;
+;PCODE: $000002F7 VOL: 0
+;PCODE: $000002F8 VOL: 0
+;PCODE: $000002F9 VOL: 0
+; 0000 0263             }
+; 0000 0264         else
+;PCODE: $000002FA VOL: 0
+;PCODE: $000002FB VOL: 0
+; 0000 0265             {
+; 0000 0266             path[7]--;
+;PCODE: $000002FC VOL: 0
+;PCODE: $000002FD VOL: 0
+;PCODE: $000002FE VOL: 0
+;PCODE: $000002FF VOL: 0
+;PCODE: $00000300 VOL: 0
+; 0000 0267             }
+;PCODE: $00000301 VOL: 0
+; 0000 0268         }
+;PCODE: $00000302 VOL: 0
+; 0000 0269     }
+; 0000 026A else
+;PCODE: $00000303 VOL: 0
+;PCODE: $00000304 VOL: 0
+; 0000 026B     {
+; 0000 026C     if(nxt)
+;PCODE: $00000305 VOL: 0
+;PCODE: $00000306 VOL: 0
+;PCODE: $00000307 VOL: 0
+; 0000 026D         {
+; 0000 026E         if(path[16]==57)
+;PCODE: $00000308 VOL: 0
+;PCODE: $00000309 VOL: 0
+;PCODE: $0000030A VOL: 0
+;PCODE: $0000030B VOL: 0
+; 0000 026F             {
+; 0000 0270             path[16]=48;
+;PCODE: $0000030C VOL: 0
+;PCODE: $0000030D VOL: 0
+;PCODE: $0000030E VOL: 0
+; 0000 0271             if(path[15]==57)
+;PCODE: $0000030F VOL: 0
+;PCODE: $00000310 VOL: 0
+;PCODE: $00000311 VOL: 0
+;PCODE: $00000312 VOL: 0
+; 0000 0272                 {
+; 0000 0273                 path[15]=48;
+;PCODE: $00000313 VOL: 0
+;PCODE: $00000314 VOL: 0
+;PCODE: $00000315 VOL: 0
+; 0000 0274                 path[16]=49;
+;PCODE: $00000316 VOL: 0
+;PCODE: $00000317 VOL: 0
+;PCODE: $00000318 VOL: 0
+; 0000 0275                 }
+; 0000 0276             else
+;PCODE: $00000319 VOL: 0
+;PCODE: $0000031A VOL: 0
+; 0000 0277                 {
+; 0000 0278                 path[15]++;
+;PCODE: $0000031B VOL: 0
+;PCODE: $0000031C VOL: 0
+;PCODE: $0000031D VOL: 0
+;PCODE: $0000031E VOL: 0
+;PCODE: $0000031F VOL: 0
+; 0000 0279                 }
+;PCODE: $00000320 VOL: 0
+; 0000 027A             }
+; 0000 027B         else
+;PCODE: $00000321 VOL: 0
+;PCODE: $00000322 VOL: 0
+; 0000 027C             {
+; 0000 027D             path[16]++;
+;PCODE: $00000323 VOL: 0
+;PCODE: $00000324 VOL: 0
+;PCODE: $00000325 VOL: 0
+;PCODE: $00000326 VOL: 0
+;PCODE: $00000327 VOL: 0
+; 0000 027E             }
+;PCODE: $00000328 VOL: 0
+; 0000 027F         }
+; 0000 0280     else
+;PCODE: $00000329 VOL: 0
+;PCODE: $0000032A VOL: 0
+; 0000 0281         {
+; 0000 0282         if(path[16]==48)
+;PCODE: $0000032B VOL: 0
+;PCODE: $0000032C VOL: 0
+;PCODE: $0000032D VOL: 0
+;PCODE: $0000032E VOL: 0
+; 0000 0283             {
+; 0000 0284             path[16]=57;
+;PCODE: $0000032F VOL: 0
+;PCODE: $00000330 VOL: 0
+;PCODE: $00000331 VOL: 0
+; 0000 0285             if(path[15]==48)
+;PCODE: $00000332 VOL: 0
+;PCODE: $00000333 VOL: 0
+;PCODE: $00000334 VOL: 0
+;PCODE: $00000335 VOL: 0
+; 0000 0286                 {
+; 0000 0287                 path[15]=57;
+;PCODE: $00000336 VOL: 0
+;PCODE: $00000337 VOL: 0
+;PCODE: $00000338 VOL: 0
+; 0000 0288                 path[16]=57;
+;PCODE: $00000339 VOL: 0
+;PCODE: $0000033A VOL: 0
+;PCODE: $0000033B VOL: 0
+; 0000 0289                 }
+; 0000 028A             else
+;PCODE: $0000033C VOL: 0
+;PCODE: $0000033D VOL: 0
+; 0000 028B                 {
+; 0000 028C                 path[15]--;
+;PCODE: $0000033E VOL: 0
+;PCODE: $0000033F VOL: 0
+;PCODE: $00000340 VOL: 0
+;PCODE: $00000341 VOL: 0
+;PCODE: $00000342 VOL: 0
+; 0000 028D                 }
+;PCODE: $00000343 VOL: 0
+; 0000 028E             }
+; 0000 028F         else
+;PCODE: $00000344 VOL: 0
+;PCODE: $00000345 VOL: 0
+; 0000 0290             {
+; 0000 0291             path[16]--;
+;PCODE: $00000346 VOL: 0
+;PCODE: $00000347 VOL: 0
+;PCODE: $00000348 VOL: 0
+;PCODE: $00000349 VOL: 0
+;PCODE: $0000034A VOL: 0
+; 0000 0292             }
+;PCODE: $0000034B VOL: 0
+; 0000 0293         }
+;PCODE: $0000034C VOL: 0
+; 0000 0294     }
+;PCODE: $0000034D VOL: 0
+; 0000 0295 }
+;PCODE: $0000034E VOL: 0
+;PCODE: $0000034F VOL: 0
+; 0000 0296 }
+;PCODE: $00000350 VOL: 0
+;PCODE: $00000351 VOL: 0
+;PCODE: $00000352 VOL: 0
+;
+;

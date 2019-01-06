@@ -1,0 +1,96 @@
+RAM Allocation [bytes]
+Variable                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+prtc_get_time                                                                     0x2400       2
+prtc_get_date                                                                     0x2402       2
+fat                                                                               0x2404     562
+file                                                                              0x2636     544
+finfo                                                                             0x2856      22
+path                                                                              0x286C      22
+buffer_1                                                                          0x2882    1536
+FROM_SD                                                                           0x2E82       4
+SEND                                                                              0x2E86       6
+WFM                                                                               0x2E8C      64
+flength                                                                           0x2ECC       4
+status                                                                            0x2ED0       1
+timer1                                                                            0x2ED1       1
+timer2                                                                            0x2ED2       1
+card_type                                                                         0x2ED3       1
+FatFs                                                                             0x2ED4       2
+Fsid                                                                              0x2ED6       2
+Drive                                                                             0x2ED8       1
+_seed                                                                             0x2ED9       4
+
+EEPROM Allocation [bytes]
+Variable                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+
+Register Allocation
+Variable                                                                          Register  Size
+------------------------------------------------------------------------------------------------
+res                                                                               R3           1
+nbytes                                                                            R4,R5        2
+remain                                                                            R6,R7        2
+b                                                                                 R8,R9        2
+play                                                                              GPIO0.0  1bit
+stt                                                                               GPIO0.1  1bit
+nxt                                                                               GPIO0.2  1bit
+fldr                                                                              GPIO0.3  1bit
+FPGA_TRACK_TIME                                                                   R2           1
+allsec                                                                            R10,R11      2
+analyzing                                                                         R13          1
+cnt_uart                                                                          R12          1
+
+FLASH Allocation [words]
+Function                                                                          Address   Size
+------------------------------------------------------------------------------------------------
+system_clocks_init                                                                0x0019A     66
+rtcxm_init                                                                        0x001DC     49
+rtcxm_overflow_isr                                                                0x0020D     29
+ports_init                                                                        0x0022A    117
+usarte0_init                                                                      0x0029F     24
+putchar_usarte0                                                                   0x002B7      9
+portb_int0_isr                                                                    0x002C0     36
+main                                                                              0x002E4    750
+crc7_G100                                                                         0x005D2     29
+wait_ready_G100                                                                   0x005EF     30
+deselect_card_G100                                                                0x0060D     11
+rx_datablock_G100                                                                 0x00618    121
+tx_datablock_G100                                                                 0x00691     80
+send_cmd_G100                                                                     0x006E1    118
+rx_spi4_G100                                                                      0x00757     23
+disk_initialize                                                                   0x0076E    214
+disk_status                                                                       0x00844     10
+disk_read                                                                         0x0084E    100
+disk_write                                                                        0x008B2    119
+disk_ioctl                                                                        0x00929    409
+disk_timerproc                                                                    0x00AC2     22
+get_fattime                                                                       0x00AD8    138
+chk_chrf_G101                                                                     0x00B62     23
+move_window_G101                                                                  0x00B79    159
+sync_G101                                                                         0x00C18    144
+get_fat                                                                           0x00CA8    232
+put_fat                                                                           0x00D90    274
+remove_chain_G101                                                                 0x00EA2    149
+create_chain_G101                                                                 0x00F37    305
+clust2sect                                                                        0x01068     60
+dir_seek_G101                                                                     0x010A4    252
+dir_next_G101                                                                     0x011A0    362
+dir_find_G101                                                                     0x0130A     77
+dir_register_G101                                                                 0x01357    115
+create_name_G101                                                                  0x013CA    215
+get_fileinfo_G101                                                                 0x014A1    145
+follow_path_G101                                                                  0x01532    159
+check_fs_G101                                                                     0x015D1     83
+chk_mounted                                                                       0x01624    605
+validate_G101                                                                     0x01881     34
+f_mount                                                                           0x018A3     50
+f_open                                                                            0x018D5    347
+f_read                                                                            0x01A30    563
+f_sync                                                                            0x01C63    157
+f_close                                                                           0x01D00     19
+f_lseek                                                                           0x01D13    689
+f_stat                                                                            0x01FC4     51
+memcmp                                                                            0x01FF7     25
+memcpy                                                                            0x02010     18
+memset                                                                            0x02022     16
